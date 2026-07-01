@@ -1,0 +1,28 @@
+.d-flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.flex-fill {
+  flex: 1;
+}
+
+.gap-1 {
+  gap: 1rem;
+}
+
+.woo_extndr_product_main_features_container {
+  width: 59%;
+  padding: 1rem;
+}
+
+.woo_extndr_product_main_features_heading {
+  margin-inline-end: 4.5rem;
+}
+
+#woocommerce-product-data ul.product_data_tabs li.woo_extend_tab a::before {
+  content: "\f163";
+}

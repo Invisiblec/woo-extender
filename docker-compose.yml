@@ -1,0 +1,64 @@
+services:
+
+  db:
+    image: mariadb:11.8
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=wordpress_db
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=admin123
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - back-net
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+  
+  wordpress:
+    depends_on:
+      db:
+        condition: service_healthy
+    image: wordpress:latest
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      - WORDPRESS_DB_HOST=db
+      - WORDPRESS_DB_NAME=wordpress_db
+      - WORDPRESS_DB_USER=admin
+      - WORDPRESS_DB_PASSWORD=admin123
+    volumes:
+      - ./wordpress_data:/var/www/html
+      - ./woo_extender:/var/www/html/wp-content/plugins/woo_extender
+    networks:
+      - back-net
+      - front-net
+
+  phpmyadmin:
+    depends_on:
+      db:
+        condition: service_healthy
+    image: phpmyadmin:latest
+    restart: always
+    ports:
+      - "8081:80"
+    environment:
+      - PMA_HOST=db
+    networks:
+      - back-net
+      - front-net
+
+networks:
+  back-net:
+    driver: bridge
+    internal: true
+  front-net:
+    driver: bridge
+
+volumes:
+  db_data:
