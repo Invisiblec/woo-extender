@@ -48,23 +48,31 @@ class Batch extends BaseModel
     {
         return [
             'product_id' => [
-                'label' => __('Product ID', 'woo-extender'),
+                'label' => __('Product', 'woo-extender'),
                 'type'  => 'number',
+                'ui_type' => 'parent_product_search',
+                'action' => 'woo_extender_search_parent_products',
                 'required' => true
             ],
             'variation_id' => [
-                'label' => __('Variation ID', 'woo-extender'),
+                'label' => __('Variation', 'woo-extender'),
                 'type' => 'number',
+                'ui_type' => 'variation_product_search',
+                'action' => 'woo_extender_get_product_variations',
                 'required' => false
             ],
             'supplier_id' => [
-                'label' => __('Supplier ID', 'woo-extender'),
+                'label' => __('Supplier', 'woo-extender'),
                 'type' => 'number',
+                'ui_type' => 'ajax_select',
+                'action' => 'woo_extender_supplier_search',
                 'required' => true
             ],
             'warranty_provider_id' => [
-                'label' => __('Warranty Provider ID', 'woo-extender'),
+                'label' => __('Warranty Provider', 'woo-extender'),
                 'type' => 'number',
+                'ui_type' => 'ajax_select',
+                'action' => 'woo_extender_warranty_search',
                 'required' => false
             ],
             'sku' => [
@@ -80,12 +88,12 @@ class Batch extends BaseModel
             'quantity_reserved' => [
                 'label' => __('Quantity Reserved', 'woo-extender'),
                 'type' => 'number',
-                'required' => true
+                'required' => false
             ],
             'quantity_sold' => [
                 'label' => __('Quantity Sold', 'woo-extender'),
                 'type' => 'number',
-                'required' => true
+                'required' => false
             ],
             'buy_price' => [
                 'label' => __('Buy Price', 'woo-extender'),
@@ -133,8 +141,8 @@ class Batch extends BaseModel
         if (isset($this->quantity_total))           $prepared['quantity_total'] = Sanitize::int($this->quantity_total);
         if (isset($this->quantity_reserved))        $prepared['quantity_reserved'] = Sanitize::int($this->quantity_reserved);
         if (isset($this->quantity_sold))            $prepared['quantity_sold'] = Sanitize::int($this->quantity_sold);
-        if (isset($this->buy_price))                $prepared['buy_price'] = Sanitize::float($this->buy_price);
-        if (isset($this->sell_price))               $prepared['sell_price'] = Sanitize::float($this->sell_price);
+        if (isset($this->buy_price))                $prepared['buy_price'] = is_float($this->buy_price) ? Sanitize::float($this->buy_price) : floatval($this->buy_price);
+        if (isset($this->sell_price))               $prepared['sell_price'] = is_float($this->sell_price) ? Sanitize::float($this->sell_price) : floatval($this->sell_price);
 
         if (! empty($this->purchase_date)) {
             $prepared['purchase_date'] = date("Y-m-d", strtotime($this->purchase_date));

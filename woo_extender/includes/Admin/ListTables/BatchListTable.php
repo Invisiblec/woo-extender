@@ -43,6 +43,7 @@ class BatchListTable extends WP_List_Table
             'cost_total' => __('Total Cost', 'woo-extender'),
             'purchase_date' => __('Purchase Date', 'woo-extender'),
             'created_at' => __('Date Recorded', 'woo-extender'),
+            'actions' => __('Actions', 'woo-extender')
         ];
     }
 
@@ -77,10 +78,10 @@ class BatchListTable extends WP_List_Table
     #[Override]
     public function column_default($item, $column_name): string
     {
-        return isset($item->$column_name) ? esc_html($item->$column_name) : '';
+        return isset($item->$column_name) ? esc_html($item->$column_name) : '-';
     }
 
-    public function column_name(object $item): string
+    public function column_actions(object $item): string
     {
         $base_url   = admin_url('admin.php?page=woo-extender-batches');
         $edit_url   = add_query_arg(['action' => 'edit', 'id' => $item->id], $base_url);
@@ -104,7 +105,7 @@ class BatchListTable extends WP_List_Table
             '<strong><a class="row-title" href="%s">%s</a></strong> %s',
             esc_url($edit_url),
             esc_html($item->name),
-            $this->row_actions($actions)
+            $this->row_actions($actions, true)
         );
     }
 

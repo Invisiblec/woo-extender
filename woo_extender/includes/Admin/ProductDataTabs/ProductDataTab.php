@@ -50,7 +50,7 @@ class ProductDataTab
         $main_features = $_POST['woo_extndr_product_main_feature'] ?? [];
 
         if (is_array($main_features)) {
-            $main_features = map_deep(wp_unslash($main_features), 'Sanitize::string');
+            $main_features = Sanitize::field($main_features);
             $main_features = array_filter($main_features, function ($feature) {
                 return ! empty($feature['title']) || ! empty($feature['value']);
             });
