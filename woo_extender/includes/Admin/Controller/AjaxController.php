@@ -20,8 +20,6 @@ class AjaxController
         add_action('wp_ajax_woo_extender_supplier_search', [$this, 'search_suppliers']);
         add_action('wp_ajax_woo_extender_warranty_search', [$this, 'search_warranties']);
 
-        // Backwards-compatible hooks (if other code expects these names)
-        add_action('wp_ajax_woo_extender_search_suppliers', [$this, 'search_suppliers']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
     }
 

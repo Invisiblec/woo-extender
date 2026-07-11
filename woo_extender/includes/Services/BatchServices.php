@@ -9,6 +9,8 @@ defined('ABSPATH') || exit;
 
 class BatchServices
 {
+    private static $cache = [];
+
     public function get_table_schema(): string
     {
         return Batch::get_table_schema();
@@ -26,7 +28,10 @@ class BatchServices
 
     public function get_by_id(int $id): ?Batch
     {
-        return Batch::get_by_id($id);
+        if (!isset($this->cache[$id])) {
+            $this->cache[$id] = Batch::get_by_id($id);
+        }
+        return $this->cache[$id];
     }
 
     public function get_form_fields(): array
