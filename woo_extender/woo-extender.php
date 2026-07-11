@@ -15,6 +15,7 @@ define('WOO_EXTNDR_PATH', plugin_dir_path(__FILE__));
 define('WOO_EXTNDR_URL', plugin_dir_url(__FILE__));
 
 require_once WOO_EXTNDR_PATH . 'vendor/autoload.php';
+require_once WOO_EXTNDR_PATH . 'includes/Helpers/functions.php';
 
 use WooExtender\Core\Plugin;
 

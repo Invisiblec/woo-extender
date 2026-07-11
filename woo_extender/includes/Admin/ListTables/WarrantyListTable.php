@@ -93,7 +93,7 @@ class WarrantyListTable extends WP_List_Table
         ];
 
         return sprintf(
-            '<strong><a href="%s" class=""row-title>%s</a></strong> %s',
+            '<strong><a href="%s" class="row-title">%s</a></strong> %s',
             esc_url($edit_url),
             esc_html($item->name),
             $this->row_actions($actions)

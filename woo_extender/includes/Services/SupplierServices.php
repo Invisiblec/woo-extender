@@ -73,7 +73,7 @@ class SupplierServices
         return Supplier::get_form_fields();
     }
 
-    public static function get_count(array $args = []): string
+    public function get_count(array $args = []): string
     {
         return Supplier::get_count($args);
     }

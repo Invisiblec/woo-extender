@@ -31,19 +31,19 @@ class BatchListTable extends WP_List_Table
         return [
             'cb'           => '<input type="checkbox" />',
             'product_id' => __('Product', 'woo-extender'),
+            'variation_id' => __('Variation', 'woo-extender'),
             'supplier_id' => __('Supplier', 'woo-extender'),
             'sku' => __('Batch SKU', 'woo-extender'),
             'quantity_total' => __('Total', 'woo-extender'),
             'quantity_reserved' => __('Reserved', 'woo-extender'),
             'quantity_sold' => __('Sold', 'woo-extender'),
-            'quntity_available' => __('Available', 'woo-extender'),
+            'quantity_available' => __('Available', 'woo-extender'),
             'warranty_end_date' => __('Warranty\'s End', 'woo-extender'),
             'sell_price' => __('Sell Price', 'woo-extender'),
             'buy_price' => __('Buy Price', 'woo-extender'),
             'cost_total' => __('Total Cost', 'woo-extender'),
             'purchase_date' => __('Purchase Date', 'woo-extender'),
             'created_at' => __('Date Recorded', 'woo-extender'),
-            'actions' => __('Actions', 'woo-extender')
         ];
     }
 
@@ -54,6 +54,45 @@ class BatchListTable extends WP_List_Table
             'warranty_end_date' => ['warranty_end_date', true],
             'purchase_date' => ['purchase_date', true],
         ];
+    }
+
+    public function column_product_id(object $item): string
+    {
+        $base_url   = admin_url('admin.php?page=woo-extender-batches');
+        $edit_url   = add_query_arg(['action' => 'edit', 'id' => $item->id], $base_url);
+        $delete_url = add_query_arg([
+            'action'           => 'delete',
+            'id'               => $item->id,
+            '_wpnonce-batches' => wp_create_nonce('bulk-batches_' . $item->id)
+        ], $base_url);
+
+        $actions = [
+            'edit'   => sprintf('<a href="%s">%s</a>', esc_url($edit_url), __('Edit', 'woo-extender')),
+            'delete' => sprintf(
+                '<a href="%s" class="submitdelete" onclick="return confirm(\'%s\')">%s</a>',
+                esc_url($delete_url),
+                __('Are you sure to delete this batch?', 'woo-extender'),
+                __('Delete', 'woo-extender')
+            ),
+        ];
+
+        return sprintf(
+            '<strong><a class="row-title" href="%s">%s</a></strong> %s',
+            esc_url($edit_url),
+            esc_html(get_the_title($item->product_id)),
+            $this->row_actions($actions)
+        );
+    }
+
+    public function column_variation_id(object $item): array|string
+    {
+        $variation = wc_get_product($item->variation_id);
+        return ucfirst(implode(' - ', $variation->get_attributes()));
+    }
+
+    public function column_supplier_id(object $item): ?string
+    {
+        return woo_extender_get_supplier_name($item->supplier_id);
     }
 
     public function column_cb($item): string
@@ -81,33 +120,6 @@ class BatchListTable extends WP_List_Table
         return isset($item->$column_name) ? esc_html($item->$column_name) : '-';
     }
 
-    public function column_actions(object $item): string
-    {
-        $base_url   = admin_url('admin.php?page=woo-extender-batches');
-        $edit_url   = add_query_arg(['action' => 'edit', 'id' => $item->id], $base_url);
-        $delete_url = add_query_arg([
-            'action'           => 'delete',
-            'id'               => $item->id,
-            '_wpnonce-batches' => wp_create_nonce('bulk-batches_' . $item->id)
-        ], $base_url);
-
-        $actions = [
-            'edit'   => sprintf('<a href="%s">%s</a>', esc_url($edit_url), __('Edit', 'woo-extender')),
-            'delete' => sprintf(
-                '<a href="%s" class="submitdelete" onclick="return confirm(\'%s\')">%s</a>',
-                esc_url($delete_url),
-                __('Are you sure to delete this batch?', 'woo-extender'),
-                __('Delete', 'woo-extender')
-            ),
-        ];
-
-        return sprintf(
-            '<strong><a class="row-title" href="%s">%s</a></strong> %s',
-            esc_url($edit_url),
-            esc_html($item->name),
-            $this->row_actions($actions, true)
-        );
-    }
 
     #[Override]
     public function prepare_items(): void
