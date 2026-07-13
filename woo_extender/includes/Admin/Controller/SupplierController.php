@@ -4,7 +4,7 @@ namespace WooExtender\Admin\Controller;
 
 use Override;
 use WooExtender\Enums\Pages;
-use WooExtender\Services\SupplierServices as Supplier;
+use WooExtender\Services\SupplierService as Supplier;
 
 defined('ABSPATH') || exit;
 

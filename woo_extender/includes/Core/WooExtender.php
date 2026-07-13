@@ -6,7 +6,7 @@ defined('ABSPATH') || exit;
 
 class WooExtender
 {
-    private $instances = [];
+    private static $instances = [];
 
     public static function service(string $key, string $class)
     {

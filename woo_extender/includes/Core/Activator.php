@@ -4,8 +4,8 @@ namespace WooExtender\Core;
 
 defined('ABSPATH') || exit;
 
-use WooExtender\Services\SupplierServices as Supplier;
-use WooExtender\Services\WarrantyServices as Warranty;
+use WooExtender\Services\SupplierService as Supplier;
+use WooExtender\Services\WarrantyService as Warranty;
 use WooExtender\Models\Batch;
 
 class Activator

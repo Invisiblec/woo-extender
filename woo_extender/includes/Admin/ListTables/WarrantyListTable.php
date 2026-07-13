@@ -4,7 +4,7 @@ namespace WooExtender\Admin\ListTables;
 
 use Override;
 use WP_List_Table;
-use WooExtender\Services\WarrantyServices as Warranty;
+use WooExtender\Services\WarrantyService as Warranty;
 use WooExtender\Helpers\Sanitize;
 
 defined('ABSPATH') || exit;

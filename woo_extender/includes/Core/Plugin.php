@@ -10,6 +10,7 @@ use WooExtender\Admin\ProductDataTabs\ProductDataTab;
 use WooExtender\Admin\Controller\SupplierController;
 use WooExtender\Admin\Controller\WarrantyController;
 use WooExtender\Admin\Controller\BatchController;
+use WooExtender\Services\InventoryService;
 
 class Plugin
 {
@@ -23,5 +24,6 @@ class Plugin
         if (class_exists(SupplierController::class)) new SupplierController();
         if (class_exists(WarrantyController::class)) new WarrantyController();
         if (class_exists(BatchController::class)) new BatchController();
+        new InventoryService();
     }
 }

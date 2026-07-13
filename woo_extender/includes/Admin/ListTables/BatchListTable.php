@@ -4,7 +4,7 @@ namespace WooExtender\Admin\ListTables;
 
 use Override;
 use WP_List_Table;
-use WooExtender\Services\BatchServices as Batch;
+use WooExtender\Services\BatchService as Batch;
 use WooExtender\Helpers\Sanitize;
 
 defined('ABSPATH') || exit;
@@ -86,6 +86,7 @@ class BatchListTable extends WP_List_Table
 
     public function column_variation_id(object $item): array|string
     {
+        if (empty($item->variation_id)) return '-';
         $variation = wc_get_product($item->variation_id);
         return ucfirst(implode(' - ', $variation->get_attributes()));
     }
@@ -117,7 +118,7 @@ class BatchListTable extends WP_List_Table
     #[Override]
     public function column_default($item, $column_name): string
     {
-        return isset($item->$column_name) ? esc_html($item->$column_name) : '-';
+        return ! empty($item->$column_name) ? esc_html($item->$column_name) : '-';
     }
 
 

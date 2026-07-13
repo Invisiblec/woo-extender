@@ -2,7 +2,7 @@
 
 defined('ABSPATH') || exit;
 
-use WooExtender\Services\BatchServices as Batch;
+use WooExtender\Services\BatchService as Batch;
 use WooExtender\Helpers\Sanitize;
 
 $action = isset($_GET['action']) ? Sanitize::string($_GET['action']) : 'list';

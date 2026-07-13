@@ -4,7 +4,7 @@ namespace WooExtender\Admin\Controller;
 
 use WooExtender\Enums\Pages;
 use WooExtender\Models\Supplier;
-use WooExtender\Services\WarrantyServices;
+use WooExtender\Services\WarrantyService;
 use WooExtender\Services\AccessController;
 
 defined('ABSPATH') || exit;
@@ -127,7 +127,7 @@ class AjaxController
 
         $search_term = isset($_GET['q']) ? sanitize_text_field($_GET['q']) : '';
 
-        $warranties = (new WarrantyServices)->get_list(['search' => $search_term, 'limit' => 20]);
+        $warranties = (new WarrantyService)->get_list(['search' => $search_term, 'limit' => 20]);
         $results = [];
 
         foreach ($warranties as $w) {

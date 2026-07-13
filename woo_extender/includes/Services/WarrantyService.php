@@ -7,7 +7,7 @@ use WooExtender\Models\WarrantyProvider;
 
 defined('ABSPATH') || exit;
 
-class WarrantyServices
+class WarrantyService
 {
     public function get_table_schema(): string
     {

@@ -1,6 +1,6 @@
 <?php
 
-use WooExtender\Services\WarrantyServices as Warranty;
+use WooExtender\Services\WarrantyService as Warranty;
 
 defined('ABSPATH') || exit;
 

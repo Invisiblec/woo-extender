@@ -4,7 +4,7 @@ namespace WooExtender\Admin\Controller;
 
 use Override;
 use WooExtender\Enums\Pages;
-use WooExtender\Services\BatchServices as Batch;
+use WooExtender\Services\BatchService as Batch;
 
 defined('ABSPATH') || exit;
 

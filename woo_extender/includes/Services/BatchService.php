@@ -7,9 +7,9 @@ use WooExtender\Models\Batch;
 
 defined('ABSPATH') || exit;
 
-class BatchServices
+class BatchService
 {
-    private static $cache = [];
+    private $cache = [];
 
     public function get_table_schema(): string
     {
@@ -46,34 +46,34 @@ class BatchServices
         $id = isset($dto->id) ? Sanitize::int($dto->id) : 0;
 
         if ($id > 0) {
-            $supplier = Batch::get_by_id($id);
-            if (! $supplier) return false;
+            $batch = Batch::get_by_id($id);
+            if (! $batch) return false;
         } else {
-            $supplier = new Batch();
+            $batch = new Batch();
         }
 
         foreach (get_object_vars($dto) as $key => $value) {
             if ($key !== 'id') {
-                $supplier->$key = $value;
+                $batch->$key = $value;
             }
         }
 
-        $saved_id = $supplier->save();
+        $saved_id = $batch->save();
 
-        do_action('woo_extender_after_batch_save', $saved_id, $supplier);
+        do_action('woo_extender_after_batch_save', $saved_id, $batch);
 
         return $saved_id;
     }
 
-    public function delete(Batch $supplier): bool
+    public function delete(Batch $batch): bool
     {
-        do_action('woo_extender_before_supplier_delete', $supplier);
+        do_action('woo_extender_before_batch_delete', $batch);
 
-        $result = $supplier->delete();
+        $result = $batch->delete();
 
         if (! $result) return false;
 
-        do_action('woo_extender_after_supplier_delete', $supplier);
+        do_action('woo_extender_after_batch_delete', $batch);
 
         return true;
     }

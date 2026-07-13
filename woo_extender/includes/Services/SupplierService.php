@@ -7,7 +7,7 @@ use WooExtender\Models\Supplier;
 
 defined('ABSPATH') || exit;
 
-class SupplierServices
+class SupplierService
 {
     public function get_table_schema(): string
     {
