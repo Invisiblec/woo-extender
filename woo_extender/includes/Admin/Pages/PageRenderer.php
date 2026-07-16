@@ -13,7 +13,7 @@ class PageRenderer
     public static function render(Pages $page): void
     {
         if (AccessController::can_current_user_access($page)) {
-            require_once WOO_EXTNDR_PATH . 'includes/Admin/views/html-woo-extender-' . $page->value . '.php';
+            require_once WOO_EXTNDR_PATH . 'resources/views/admin/html-woo-extender-' . $page->value . '.php';
             return;
         }
 

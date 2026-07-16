@@ -30,7 +30,7 @@ class ProductDataTab
 
     public function render(): void
     {
-        $view_path = WOO_EXTNDR_PATH . 'includes/Admin/views/html-product-data-tab.php';
+        $view_path = WOO_EXTNDR_PATH . 'resources/views/admin/html-product-data-tab.php';
 
         if (! file_exists($view_path)) return;
 

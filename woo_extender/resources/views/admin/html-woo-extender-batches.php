@@ -16,7 +16,7 @@ if (in_array($action, ['new', 'edit'], true)) {
         $batch = (new Batch)->get_by_id($batch_id);
     }
 
-    require WOO_EXTNDR_PATH . 'includes/Admin/views/html-batch-form.php';
+    require WOO_EXTNDR_PATH . 'resources/views/admin/html-batch-form.php';
 } else {
     global $batch_table;
 ?>

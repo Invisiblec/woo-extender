@@ -16,7 +16,7 @@ if (in_array($action, ['new', 'edit'], true)) {
         $supplier = (new Supplier)->get_by_id($supplier_id);
     }
 
-    require WOO_EXTNDR_PATH . 'includes/Admin/views/html-supplier-form.php';
+    require WOO_EXTNDR_PATH . 'resources/views/admin/html-supplier-form.php';
 } else {
     global $supplier_table;
 ?>

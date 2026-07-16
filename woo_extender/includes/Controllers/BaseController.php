@@ -1,6 +1,6 @@
 <?php
 
-namespace WooExtender\Admin\Controller;
+namespace WooExtender\Controllers;
 
 use stdClass;
 use WooExtender\Enums\Pages;

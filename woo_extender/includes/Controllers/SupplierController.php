@@ -1,60 +1,60 @@
 <?php
 
-namespace WooExtender\Admin\Controller;
+namespace WooExtender\Controllers;
 
 use Override;
 use WooExtender\Enums\Pages;
-use WooExtender\Services\WarrantyService as Warranty;
+use WooExtender\Services\SupplierService as Supplier;
 
 defined('ABSPATH') || exit;
 
-class WarrantyController extends BaseController
+class SupplierController extends BaseController
 {
     #[Override]
     protected function get_page(): Pages
     {
-        return Pages::Warranties;
+        return Pages::Suppliers;
     }
 
     #[Override]
     protected function get_nonce_action(): string
     {
-        return 'save_warranty_action';
+        return 'save_supplier_action';
     }
 
     #[Override]
     protected function get_nonce_field(): string
     {
-        return 'warranty_nonce_field';
+        return 'supplier_nonce_field';
     }
 
     #[Override]
     protected function get_table_nonce_action(): string
     {
-        return 'bulk-warranties';
+        return 'bulk-suppliers';
     }
 
     #[Override]
     protected function get_table_nonce_field(): string
     {
-        return '_wpnonce-warranties';
+        return '_wpnonce-suppliers';
     }
 
     #[Override]
     protected function get_service_class(): string
     {
-        return Warranty::class;
+        return Supplier::class;
     }
 
     #[Override]
     protected function get_class_prefix(): string
     {
-        return 'Warranty';
+        return 'Supplier';
     }
 
     #[Override]
     protected static function get_global_var(): string
     {
-        return 'warranty_table';
+        return 'supplier_table';
     }
 }

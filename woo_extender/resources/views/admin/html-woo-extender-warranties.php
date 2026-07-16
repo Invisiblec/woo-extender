@@ -16,7 +16,7 @@ if (in_array($action, ['new', 'edit'], true)) {
         $warranty = (new Warranty)->get_by_id($warranty_id);
     }
 
-    require WOO_EXTNDR_PATH . 'includes/Admin/views/html-warranty-form.php';
+    require WOO_EXTNDR_PATH . 'resources/views/admin/html-warranty-form.php';
 } else {
     global $warranty_table;
 ?>

@@ -85,24 +85,16 @@ class Batch extends BaseModel
                 'type' => 'number',
                 'required' => true
             ],
-            'quantity_reserved' => [
-                'label' => __('Quantity Reserved', 'woo-extender'),
-                'type' => 'number',
-                'required' => false
-            ],
-            'quantity_sold' => [
-                'label' => __('Quantity Sold', 'woo-extender'),
-                'type' => 'number',
-                'required' => false
-            ],
             'buy_price' => [
                 'label' => __('Buy Price', 'woo-extender'),
                 'type' => 'text',
+                'data_type' => 'float',
                 'required' => true
             ],
             'sell_price' => [
                 'label' => __('Sell Price', 'woo-extender'),
                 'type' => 'text',
+                'data_type' => 'float',
                 'required' => false
             ],
             'warranty_start_date' => [

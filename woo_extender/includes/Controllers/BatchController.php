@@ -1,6 +1,6 @@
 <?php
 
-namespace WooExtender\Admin\Controller;
+namespace WooExtender\Controllers;
 
 use Override;
 use WooExtender\Enums\Pages;

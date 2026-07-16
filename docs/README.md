@@ -6,6 +6,9 @@
 ![WordPress](https://img.shields.io/badge/WordPress-6.0%2B-21759B.svg)
 ![WooCommerce](https://img.shields.io/badge/WooCommerce-8.0%2B-96588A.svg)
 ![License](https://img.shields.io/badge/License-GPL--2.0--or--later-blue.svg)
+![Build Status](https://img.shields.io/github/actions/workflow/status/github.com/Invisiblec/woo-extender/tests.yml?branch=main&label=build)
+![Coverage](https://img.shields.io/codecov/c/github/github.com/Invisiblec/woo-extender?color=success)
+![Code Quality](https://img.shields.io/codefactor/grade/github/github.com/Invisiblec/woo-extender?color=success)
 
 ---
 
@@ -177,7 +180,17 @@ Woo Extender uses a layered architectural design to mediate between WordPress ho
       Database (Custom Tables / WPDB)
 ```
 
-    A technical breakdown of this architecture is available in: docs/ARCHITECTURE.md
+A technical breakdown of this architecture is available in: `docs/ARCHITECTURE.md`
+
+---
+
+## Performance & Caching
+
+Enterprise-grade operations, particularly inventory valuation and reporting, require strict performance management. Woo Extender incorporates a multi-level caching strategy:
+
+- **WordPress Object Cache:** Repetitive database queries (e.g., fetching supplier details or active batches) are cached using the WP Object Cache API (`wp_cache_set`, `wp_cache_get`).
+- **Transients API:** Expensive calculations, such as monthly COGS (Cost of Goods Sold) or total inventory valuation, are stored as transients and invalidated only when underlying data changes.
+- **Cache Invalidation:** Services are responsible for clearing related caches when write operations (Insert/Update/Delete) occur. Repositories should never manage cache invalidation directly.
 
 ---
 
@@ -268,7 +281,7 @@ wp plugin activate woo-extender
 
 The project is organized into independent modules with clearly defined responsibilities.
 
-```
+```text
 woo-extender/
 ├── assets/                  # Public static assets
 │   ├── css/
@@ -319,11 +332,11 @@ woo-extender/
 
 ---
 
-# Directory Responsibilities
+## Directory Responsibilities
 
 Every directory serves a single, specific purpose within the project structure.
 
-## assets/
+### assets/
 
 Contains static resources that are directly requested by the client browser.
 
@@ -337,7 +350,7 @@ Note: No PHP execution or business logic is permitted in this directory.
 
 ---
 
-## config/
+### config/
 
 Contains native PHP array files returning configuration data.
 
@@ -351,7 +364,7 @@ Note: Configuration files should return data arrays and should not contain compl
 
 ---
 
-## database/
+### database/
 
 Handles schema modeling and data structures.
 
@@ -365,7 +378,7 @@ Note: This directory represents structure and initial states, not query-time dat
 
 ---
 
-## docs/
+### docs/
 
 Houses system documentation for developers, system administrators, and integration teams.
 
@@ -379,7 +392,7 @@ Note: Documentation should always be updated alongside code changes.
 
 ---
 
-## resources/
+### resources/
 
 Contains uncompiled presentation templates and views.
 
@@ -393,19 +406,19 @@ Note: Views should only render data and perform basic loops/conditionals; busine
 
 ---
 
-## routes/
+### routes/
 
 Manages endpoint registrations for modern communication APIs. In a WordPress context, this directory houses registrations for custom namespaces within the WP REST API.
 
 ---
 
-## src/
+### src/
 
 The core source directory containing the application logic. All classes inside this directory follow the PSR-4 namespace configuration (WooExtender\).
 
 ---
 
-## storage/
+### storage/
 
 Designed to temporarily store runtime file output, such as custom diagnostics, exported CSV operations, or temporary caches.
 Note: Because plugin-specific directories may have write restrictions on specialized WordPress hosts (such as WP Engine or Pantheon), this directory should be used for temporary local compilation, with critical runtime file storage routed safely to the standard WordPress uploads path (wp-content/uploads/woo-extender/) via the WordPress Filesystem API.
@@ -420,7 +433,7 @@ Nothing inside this directory should be committed to Git unless explicitly requi
 
 ---
 
-## tests/
+### tests/
 
 Houses standard testing suites.
 
@@ -430,13 +443,13 @@ Houses standard testing suites.
 
 ---
 
-# Source Code Structure
+## Source Code Structure
 
 The src directory follows a modular architecture.
 
 Each namespace has a clearly defined responsibility.
 
-```
+```text
 src/
 ├── Admin/         # Admin screen integration, menus, and meta-boxes
 ├── Bootstrap/     # Plugin startup, Composer loading, and system initialization
@@ -459,9 +472,9 @@ src/
 
 ---
 
-# Directory Details
+## Directory Details
 
-## Admin
+### Admin
 
 Handles integration with the standard WordPress admin panel.
 
@@ -475,7 +488,7 @@ Note: Admin classes function as coordinators. They extract configuration, receiv
 
 ---
 
-## Bootstrap
+### Bootstrap
 
 Executes early initialization sequences when the plugin loader file executes.
 
@@ -491,7 +504,7 @@ This directory should execute only once during plugin initialization.
 
 ---
 
-## Controllers
+### Controllers
 
 Controllers receive requests and delegate work to Services.
 
@@ -509,7 +522,7 @@ Nothing more.
 
 ---
 
-## Core
+### Core
 
 Contains the framework layer of Woo Extender.
 
@@ -527,7 +540,7 @@ Core should depend on nothing.
 
 ---
 
-## Database
+### Database
 
 Contains database abstractions.
 
@@ -541,7 +554,7 @@ SQL should never be scattered throughout the project.
 
 ---
 
-## DTO
+### DTO
 
 Contains Data Transfer Objects.
 
@@ -553,7 +566,7 @@ They should never contain business logic.
 
 ---
 
-## Exceptions
+### Exceptions
 
 Contains all custom exception classes.
 
@@ -563,7 +576,7 @@ Avoid generic exceptions whenever possible.
 
 ---
 
-## Helpers
+### Helpers
 
 Small reusable utility classes.
 
@@ -577,7 +590,7 @@ Helpers should never become a dumping ground for random functions.
 
 ---
 
-## Hooks
+### Hooks
 
 Responsible for WordPress hooks.
 
@@ -587,7 +600,7 @@ This makes the application easier to understand and debug.
 
 ---
 
-## Interfaces
+### Interfaces
 
 Contains contracts shared across the application.
 
@@ -595,7 +608,7 @@ Programming against interfaces improves flexibility and testing.
 
 ---
 
-## Models
+### Models
 
 Represents domain objects.
 
@@ -609,7 +622,7 @@ Models should not directly query the database.
 
 ---
 
-## Services
+### Services
 
 Services contain the application's business logic.
 
@@ -631,7 +644,7 @@ Those responsibilities belong to other layers.
 
 ---
 
-## Service Responsibilities
+### Service Responsibilities
 
 A Service MAY:
 
@@ -646,15 +659,16 @@ A Service MUST NOT:
 
 - Render HTML
 - Echo output
-- Access $\_POST directly
-- Access $\_GET directly
+- Access `$_POST` directly
+- Access `$_GET` directly
+- Access `$_SERVER` directly
 - Register WordPress hooks
 - Build SQL queries
 - Perform direct database operations
 
 ---
 
-## Example
+### Example
 
 Correct Architecture:
 
@@ -744,7 +758,7 @@ It simply represents the data.
 
 ---
 
-# Validation
+## Validation
 
 Validation is a dedicated layer.
 
@@ -756,7 +770,7 @@ All validation logic belongs inside the Validation namespace.
 
 ---
 
-## Validation Rules
+### Validation Rules
 
 Validation classes should:
 
@@ -773,7 +787,7 @@ Validation classes should not:
 
 ---
 
-# View Layer
+## View Layer
 
 Views are responsible only for presentation.
 
@@ -793,7 +807,7 @@ Views must never:
 
 ---
 
-# Dependency Injection
+## Dependency Injection
 
 Woo Extender follows Dependency Injection wherever possible.
 
@@ -826,7 +840,7 @@ Creating dependencies manually increases coupling and reduces testability.
 
 ---
 
-# Service Providers
+## Service Providers
 
 Service Providers are responsible for registering application services.
 
@@ -846,7 +860,7 @@ Providers should not execute business logic.
 
 ---
 
-# Hook Registration
+## Hook Registration
 
 One of the project's architectural goals is to centralize WordPress hooks.
 
@@ -866,7 +880,7 @@ This greatly improves discoverability.
 
 ---
 
-# Error Handling
+## Error Handling
 
 Errors should never fail silently.
 
@@ -878,7 +892,7 @@ The application should always fail gracefully.
 
 ---
 
-## Exception Guidelines
+### Exception Guidelines
 
 Create specific exceptions whenever possible.
 
@@ -893,7 +907,7 @@ Avoid generic Exception unless absolutely necessary.
 
 ---
 
-# Logging
+## Logging
 
 Logging should help developers diagnose issues.
 
@@ -1104,6 +1118,20 @@ Good Documentation:
  * @throws ProductStorageException If database operations fail.
  */
 ```
+
+---
+
+### Internationalization (i18n)
+
+Woo Extender is designed for a global user base. All user-facing strings must be fully translatable.
+
+- **Text Domain:** Always use the `woo-extender` text domain.
+- **Proper Escaping:** Combine translation and escaping whenever outputting to the browser.
+  - Good: `esc_html__( 'Settings saved.', 'woo-extender' )`
+  - Bad: `echo __( 'Settings saved.', 'woo-extender' )`
+- **Dynamic Strings:** Never use variables directly inside translation functions. Use `sprintf()`.
+  - Good: `sprintf( esc_html__( 'Batch %s created.', 'woo-extender' ), $batch_id )`
+  - Bad: `__( 'Batch ' . $batch_id . ' created.', 'woo-extender' )`
 
 ---
 

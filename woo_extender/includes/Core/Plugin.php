@@ -5,11 +5,11 @@ namespace WooExtender\Core;
 defined('ABSPATH') || exit;
 
 use WooExtender\Admin\Menu\AdminMenu;
-use WooExtender\Admin\Controller\AjaxController;
+use WooExtender\Controllers\AjaxController;
 use WooExtender\Admin\ProductDataTabs\ProductDataTab;
-use WooExtender\Admin\Controller\SupplierController;
-use WooExtender\Admin\Controller\WarrantyController;
-use WooExtender\Admin\Controller\BatchController;
+use WooExtender\Controllers\SupplierController;
+use WooExtender\Controllers\WarrantyController;
+use WooExtender\Controllers\BatchController;
 use WooExtender\Services\InventoryService;
 
 class Plugin

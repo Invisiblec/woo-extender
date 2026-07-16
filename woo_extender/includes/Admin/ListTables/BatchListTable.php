@@ -35,8 +35,6 @@ class BatchListTable extends WP_List_Table
             'supplier_id' => __('Supplier', 'woo-extender'),
             'sku' => __('Batch SKU', 'woo-extender'),
             'quantity_total' => __('Total', 'woo-extender'),
-            'quantity_reserved' => __('Reserved', 'woo-extender'),
-            'quantity_sold' => __('Sold', 'woo-extender'),
             'quantity_available' => __('Available', 'woo-extender'),
             'warranty_end_date' => __('Warranty\'s End', 'woo-extender'),
             'sell_price' => __('Sell Price', 'woo-extender'),

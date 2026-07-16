@@ -17,7 +17,7 @@ class Sanitize
         return match ($type) {
             'text', 'string'            => self::string($value),
             'int', 'integer', 'number'  => is_numeric($value) ? self::int($value) : 0,
-            'float', 'double'           => is_float($value) ? self::float($value) : 0.0,
+            'float', 'double'           => is_numeric($value) ? self::float($value) : 0.0,
             'email'                     => self::email($value),
             'url'                       => self::url($value),
             'textarea'                  => self::textarea($value),

@@ -1,6 +1,6 @@
 <?php
 
-namespace WooExtender\Admin\Controller;
+namespace WooExtender\Controllers;
 
 use WooExtender\Enums\Pages;
 use WooExtender\Models\Supplier;
