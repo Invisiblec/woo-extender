@@ -7,12 +7,14 @@ use WooExtender\Helpers\Sanitize;
 
 defined('ABSPATH') || exit;
 
-class BatchValidator
+class DataValidator
 {
     public static function validate(array $input_data, array $fields): array
     {
         $clean_data = [];
         $errors = [];
+
+        $clean_data['id'] = isset($input_data['id']) ? Sanitize::int($input_data['id']) : null;
 
         foreach ($fields as $field_key => $field_meta) {
             $raw_value = $input_data[$field_key] ?? '';

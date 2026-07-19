@@ -133,26 +133,11 @@ class Batch extends BaseModel
         if (isset($this->quantity_total))           $prepared['quantity_total'] = Sanitize::int($this->quantity_total);
         if (isset($this->quantity_reserved))        $prepared['quantity_reserved'] = Sanitize::int($this->quantity_reserved);
         if (isset($this->quantity_sold))            $prepared['quantity_sold'] = Sanitize::int($this->quantity_sold);
-        if (isset($this->buy_price))                $prepared['buy_price'] = is_float($this->buy_price) ? Sanitize::float($this->buy_price) : floatval($this->buy_price);
-        if (isset($this->sell_price))               $prepared['sell_price'] = is_float($this->sell_price) ? Sanitize::float($this->sell_price) : floatval($this->sell_price);
-
-        if (! empty($this->purchase_date)) {
-            $prepared['purchase_date'] = date("Y-m-d", strtotime($this->purchase_date));
-        } else {
-            $prepared['purchase_date'] = null;
-        }
-
-        if (! empty($this->warranty_start_date)) {
-            $prepared['warranty_start_date'] = date("Y-m-d", strtotime($this->warranty_start_date));
-        } else {
-            $prepared['warranty_start_date'] = null;
-        }
-
-        if (! empty($this->warranty_end_date)) {
-            $prepared['warranty_end_date'] = date("Y-m-d", strtotime($this->warranty_end_date));
-        } else {
-            $prepared['warranty_end_date'] = null;
-        }
+        if (isset($this->buy_price))                $prepared['buy_price'] = Sanitize::float($this->buy_price);
+        if (isset($this->sell_price))               $prepared['sell_price'] = Sanitize::float($this->sell_price);
+        if (isset($this->purchase_date))            $prepared['purchase_date'] = Sanitize::date($this->purchase_date);
+        if (isset($this->warranty_start_date))      $prepared['warranty_start_date'] = Sanitize::date($this->warranty_start_date);
+        if (isset($this->warranty_end_date))        $prepared['warranty_end_date'] = Sanitize::date($this->warranty_end_date);
 
         return $prepared;
     }

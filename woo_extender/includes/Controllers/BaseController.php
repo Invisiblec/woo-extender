@@ -2,7 +2,6 @@
 
 namespace WooExtender\Controllers;
 
-use stdClass;
 use WooExtender\Enums\Pages;
 use WooExtender\Helpers\Sanitize;
 use WooExtender\Services\AccessController;
@@ -11,13 +10,13 @@ defined('ABSPATH') || exit;
 
 abstract class BaseController
 {
-
     abstract protected function get_page(): Pages;
     abstract protected function get_nonce_action(): string;
     abstract protected function get_nonce_field(): string;
     abstract protected function get_table_nonce_action(): string;
     abstract protected function get_table_nonce_field(): string;
     abstract protected function get_service_class(): string;
+    abstract protected function get_factory_class(): string;
 
     abstract protected function get_class_prefix(): string;
     abstract protected static function get_global_var(): string;
@@ -101,21 +100,24 @@ abstract class BaseController
         AccessController::validate_nonce($nonce_action, $nonce_field);
 
         $service_class = $this->get_service_class();
+        $factory_class = $this->get_factory_class();
         $service = new $service_class();
 
         $fields  = $service->get_form_fields();
 
-        $dto = $this->build_dto($fields);
+        try {
+            $dto = $factory_class::createDTO($_POST, $fields);
 
-        if (isset($_POST['id']) && Sanitize::int($_POST['id']) > 0) {
-            $dto->id = Sanitize::int($_POST['id']);
+            if (! $service->save($dto)) {
+                throw new \Exception(__('Failed to save the data. Please try again.', 'woo-extender'));
+            }
+
+            $this->redirect('success');
+        } catch (\WooExtender\Exceptions\ValidationException $e) {
+            $this->redirect('error');
+        } catch (\Exception $e) {
+            wp_die($e->getMessage(), __('Save Error', 'woo-extender'), ['response' => 500]);
         }
-
-        if (! $service->save($dto)) {
-            wp_die(__('Failed to save the data. Please try again.', 'woo-extender'), __('Save Error', 'woo-extender'), ['response' => 500]);
-        }
-
-        $this->redirect('success');
     }
 
     protected function destroy(): void
@@ -156,31 +158,5 @@ abstract class BaseController
         $page_slug = 'woo-extender-' . $this->get_page()->value;
         wp_safe_redirect(admin_url("admin.php?page={$page_slug}&message={$message}"));
         exit;
-    }
-
-    private function build_dto(array $fields): ?stdClass
-    {
-        $dto = new \stdClass;
-
-        foreach ($fields as $field_key => $field_meta) {
-
-            $key = $_POST[$field_key] ?? '';
-            $value = Sanitize::field($key, $field_meta['type']);
-
-            if ($field_meta['required'] && empty($value)) {
-                wp_die(
-                    sprintf(
-                        __('The "%s" field is required and cannot be empty.', 'woo-extender'),
-                        esc_html($field_meta['label'])
-                    ),
-                    __('Validation Error', 'woo-extender'),
-                    ['response' => 400]
-                );
-            }
-
-            $dto->{$field_key} = $value;
-        }
-
-        return $dto;
     }
 }

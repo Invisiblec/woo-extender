@@ -3,8 +3,10 @@
 namespace WooExtender\Controllers;
 
 use Override;
+use WooExtender\DTO\Factory\BatchDataFactory;
 use WooExtender\Enums\Pages;
 use WooExtender\Services\BatchService as Batch;
+use WooExtender\Validation\DataValidator;
 
 defined('ABSPATH') || exit;
 
@@ -44,6 +46,12 @@ class BatchController extends BaseController
     protected function get_service_class(): string
     {
         return Batch::class;
+    }
+
+    #[Override]
+    protected function get_factory_class(): string
+    {
+        return BatchDataFactory::class;
     }
 
     #[Override]

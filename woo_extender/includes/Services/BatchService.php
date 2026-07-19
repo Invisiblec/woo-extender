@@ -2,6 +2,7 @@
 
 namespace WooExtender\Services;
 
+use WooExtender\DTO\BatchData;
 use WooExtender\Helpers\Sanitize;
 use WooExtender\Models\Batch;
 
@@ -39,7 +40,7 @@ class BatchService
         return Batch::get_form_fields();
     }
 
-    public function save(object $dto): int|bool
+    public function save(BatchData $dto): int|bool
     {
         do_action('woo_extender_before_batch_save', $dto);
 

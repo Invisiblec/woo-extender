@@ -3,6 +3,7 @@
 namespace WooExtender\Controllers;
 
 use Override;
+use WooExtender\DTO\Factory\WarrantyDataFactory;
 use WooExtender\Enums\Pages;
 use WooExtender\Services\WarrantyService as Warranty;
 
@@ -44,6 +45,12 @@ class WarrantyController extends BaseController
     protected function get_service_class(): string
     {
         return Warranty::class;
+    }
+
+    #[Override]
+    protected function get_factory_class(): string
+    {
+        return WarrantyDataFactory::class;
     }
 
     #[Override]

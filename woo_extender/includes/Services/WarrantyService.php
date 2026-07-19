@@ -2,6 +2,7 @@
 
 namespace WooExtender\Services;
 
+use WooExtender\DTO\WarrantyData;
 use WooExtender\Helpers\Sanitize;
 use WooExtender\Models\WarrantyProvider;
 
@@ -14,7 +15,7 @@ class WarrantyService
         return WarrantyProvider::get_table_schema();
     }
 
-    public function save(object $dto): int|bool
+    public function save(WarrantyData $dto): int|bool
     {
         do_action('woo_extender_before_warranty_save', $dto);
 

@@ -2,39 +2,39 @@
 
 namespace WooExtender\DTO\Factory;
 
-use DateTime;
 use WooExtender\DTO\BatchData;
+use WooExtender\Validation\DataValidator;
 
 defined('ABSPATH') || exit;
 
 class BatchDataFactory
 {
-    public static function createDTO(array $data, ?int $id = null): BatchData
+    public static function createDTO(array $raw_data, array $fields): BatchData
     {
 
-        $keys = [
-            'warranty_start_date',
-            'warranty_end_date',
-            'purchase_date',
-        ];
+        $data = DataValidator::validate($raw_data, $fields);
 
-        $dates = array_map(fn($key) => !empty($data[$key]) ? new DateTime($data[$key]) : null, $keys);
+        // $keys = [
+        //     'warranty_start_date',
+        //     'warranty_end_date',
+        //     'purchase_date',
+        // ];
 
-        $dates = array_combine($keys, $dates);
+        // $dates = array_map(fn($key) => !empty($data[$key]) ? new DateTimeImmutable($data[$key]) : null, $keys);
+
+        // $dates = array_combine($keys, $dates);
 
         return new BatchData(
             product_id: $data['product_id'],
             supplier_id: $data['supplier_id'],
             quantity_total: $data['quantity_total'],
-            quantity_reserved: $data['quantity_reserved'],
-            quantity_sold: $data['quantity_sold'],
             buy_price: $data['buy_price'],
-            id: $id,
-            warranty_id: $data['warranty_id'] ?? null,
+            id: $data['id'],
+            warranty_id: $data['warranty_provider_id'] ?? null,
             sell_price: $data['sell_price'] ?? null,
-            warranty_start_date: $dates['warranty_start_date'],
-            warranty_end_date: $dates['warranty_end_date'],
-            purchase_date: $dates['purchase_date'],
+            warranty_start_date: $data['warranty_start_date'],
+            warranty_end_date: $data['warranty_end_date'],
+            purchase_date: $data['purchase_date'],
             variation_id: $data['variation_id'] ?? null,
             sku: $data['sku'] ?? null
         );

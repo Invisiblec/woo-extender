@@ -1017,7 +1017,7 @@ Suffix: `Provider` (e.g., `HookProvider`, `AdminProvider`)
 
 ### Validators
 
-Suffix: `Validator` (e.g., `BatchValidator`)
+Suffix: `Validator` (e.g., `DataValidator`)
 
 ---
 

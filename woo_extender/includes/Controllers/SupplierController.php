@@ -3,6 +3,7 @@
 namespace WooExtender\Controllers;
 
 use Override;
+use WooExtender\DTO\Factory\SupplierDataFactory;
 use WooExtender\Enums\Pages;
 use WooExtender\Services\SupplierService as Supplier;
 
@@ -44,6 +45,12 @@ class SupplierController extends BaseController
     protected function get_service_class(): string
     {
         return Supplier::class;
+    }
+
+    #[Override]
+    protected function get_factory_class(): string
+    {
+        return SupplierDataFactory::class;
     }
 
     #[Override]

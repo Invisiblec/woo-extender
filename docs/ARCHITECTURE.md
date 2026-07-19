@@ -5,7 +5,7 @@ Here is a simplified example of how data flows through the application layers us
 ```php
 namespace WooExtender\Controllers;
 
-use WooExtender\Validation\BatchValidator;
+use WooExtender\Validation\DataValidator;
 use WooExtender\DTO\BatchData;
 use WooExtender\Services\InventoryService;
 
@@ -13,7 +13,7 @@ final class BatchController
 {
     public function __construct(
         private readonly InventoryService $inventoryService,
-        private readonly BatchValidator $validator
+        private readonly DataValidator $validator
     ) {}
 
     /**

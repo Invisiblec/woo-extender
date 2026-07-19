@@ -16,9 +16,9 @@ class BatchData
         public readonly ?int $id = null,
         public readonly ?int $warranty_id = null,
         public readonly ?float $sell_price = null,
-        public readonly ?\DateTime $warranty_start_date = null,
-        public readonly ?\DateTime $warranty_end_date = null,
-        public readonly ?\DateTime $purchase_date = null,
+        public readonly ?string $warranty_start_date = null,
+        public readonly ?string $warranty_end_date = null,
+        public readonly ?string $purchase_date = null,
         public readonly ?int $variation_id = null,
         public readonly ?string $sku = null,
     ) {}

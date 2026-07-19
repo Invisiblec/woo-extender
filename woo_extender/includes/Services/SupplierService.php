@@ -2,6 +2,7 @@
 
 namespace WooExtender\Services;
 
+use WooExtender\DTO\SupplierData;
 use WooExtender\Helpers\Sanitize;
 use WooExtender\Models\Supplier;
 
@@ -14,7 +15,7 @@ class SupplierService
         return Supplier::get_table_schema();
     }
 
-    public function save(object $dto): int|bool
+    public function save(SupplierData $dto): int|bool
     {
         do_action('woo_extender_before_supplier_save', $dto);
 
