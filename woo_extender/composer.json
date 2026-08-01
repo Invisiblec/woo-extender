@@ -1,7 +1,21 @@
 {
+    "name": "wooextender/core",
     "autoload": {
         "psr-4": {
-            "WooExtender\\": "includes/"
+            "WooExtender\\": "src/"
         }
+    },
+    "require": {
+        "psr/container": "^2.0"
+    },
+    "extra": {
+        "strauss": {
+            "target_directory": "src/Vendor",
+            "namespace_prefix": "WooExtender\\Vendor\\",
+            "classmap_prefix": "WooExtender_Vendor_"
+        }
+    },
+    "require-dev": {
+        "brianhenryie/strauss": "^0.28.1"
     }
 }

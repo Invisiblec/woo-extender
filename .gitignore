@@ -1,4 +1,4 @@
 .docs/
 .vscode/
 wordpress_data/
-/vendor/
+vendor/
