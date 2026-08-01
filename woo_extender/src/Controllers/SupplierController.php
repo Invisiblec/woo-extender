@@ -7,62 +7,64 @@ namespace WooExtender\Controllers;
 use Override;
 use WooExtender\DTO\Factory\SupplierDataFactory;
 use WooExtender\Enums\Pages;
-use WooExtender\Services\SupplierService as Supplier;
+use WooExtender\Services\SupplierService;
 
 defined('ABSPATH') || exit;
 
+/**
+ * @extends BaseController<SupplierService>
+ */
 class SupplierController extends BaseController
 {
+    public function __construct(SupplierService $service)
+    {
+        parent::__construct($service);
+    }
+
     #[Override]
-    protected function get_page(): Pages
+    protected function getPage(): Pages
     {
         return Pages::Suppliers;
     }
 
     #[Override]
-    protected function get_nonce_action(): string
+    protected function getNonceAction(): string
     {
         return 'save_supplier_action';
     }
 
     #[Override]
-    protected function get_nonce_field(): string
+    protected function getNonceField(): string
     {
         return 'supplier_nonce_field';
     }
 
     #[Override]
-    protected function get_table_nonce_action(): string
+    protected function getTableNonceAction(): string
     {
         return 'bulk-suppliers';
     }
 
     #[Override]
-    protected function get_table_nonce_field(): string
+    protected function getTableNonceField(): string
     {
         return '_wpnonce-suppliers';
     }
 
     #[Override]
-    protected function get_service_class(): string
-    {
-        return Supplier::class;
-    }
-
-    #[Override]
-    protected function get_factory_class(): string
+    protected function getFactoryClass(): string
     {
         return SupplierDataFactory::class;
     }
 
     #[Override]
-    protected function get_class_prefix(): string
+    protected function getClassPrefix(): string
     {
         return 'Supplier';
     }
 
     #[Override]
-    protected static function get_global_var(): string
+    protected static function getGlobalVar(): string
     {
         return 'supplier_table';
     }

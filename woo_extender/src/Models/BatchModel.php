@@ -8,7 +8,7 @@ defined('ABSPATH') || exit;
 
 class BatchModel extends BaseModel
 {
-    public static function get_form_fields(): array
+    public static function getFormFields(): array
     {
         return [
             'product_id' => [

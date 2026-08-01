@@ -33,7 +33,7 @@ class Sanitize
         return sanitize_text_field($value);
     }
 
-    public static function int(int $value): int
+    public static function int(mixed $value): int
     {
         return absint($value);
     }

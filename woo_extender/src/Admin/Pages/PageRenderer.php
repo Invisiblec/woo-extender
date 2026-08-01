@@ -12,9 +12,10 @@ defined('ABSPATH') || exit;
 class PageRenderer
 {
 
-    public static function render(Pages $page): void
+    public static function render(Pages $page, array $data = []): void
     {
         if (AccessController::can_current_user_access($page)) {
+            extract($data);
             require_once WOO_EXTNDR_PATH . 'resources/views/admin/html-woo-extender-' . $page->value . '.php';
             return;
         }

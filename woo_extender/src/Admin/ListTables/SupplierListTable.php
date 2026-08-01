@@ -7,7 +7,7 @@ namespace WooExtender\Admin\ListTables;
 use Override;
 use WP_List_Table;
 use WooExtender\Helpers\Sanitize;
-use WooExtender\Services\SupplierService as Supplier;
+use WooExtender\Services\SupplierService;
 
 defined('ABSPATH') || exit;
 
@@ -18,7 +18,7 @@ if (! class_exists('WP_List_Table')) {
 class SupplierListTable extends WP_List_Table
 {
 
-    public function __construct()
+    public function __construct(private SupplierService $supplier)
     {
         parent::__construct([
             'singular' => 'supplier',
@@ -118,8 +118,8 @@ class SupplierListTable extends WP_List_Table
             'status'  => 1
         ];
 
-        $this->items = (new Supplier)->get_list($args);
-        $items_count = (new Supplier)->get_count($args);
+        $this->items = $this->supplier->get_list($args);
+        $items_count = $this->supplier->get_count($args);
 
         $this->set_pagination_args([
             'total_items' => $items_count,

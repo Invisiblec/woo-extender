@@ -4,44 +4,56 @@ declare(strict_types=1);
 
 namespace WooExtender\Controllers;
 
+use WooExtender\Admin\Pages\PageRenderer;
+use WooExtender\Core\WooExtender;
 use WooExtender\Enums\Pages;
 use WooExtender\Helpers\Sanitize;
 use WooExtender\Services\AccessController;
 
 defined('ABSPATH') || exit;
 
+/**
+ * @template TService
+ */
 abstract class BaseController
 {
-    abstract protected function get_page(): Pages;
-    abstract protected function get_nonce_action(): string;
-    abstract protected function get_nonce_field(): string;
-    abstract protected function get_table_nonce_action(): string;
-    abstract protected function get_table_nonce_field(): string;
-    abstract protected function get_service_class(): string;
-    abstract protected function get_factory_class(): string;
+    abstract protected function getPage(): Pages;
+    abstract protected function getNonceAction(): string;
+    abstract protected function getNonceField(): string;
+    abstract protected function getTableNonceAction(): string;
+    abstract protected function getTableNonceField(): string;
+    abstract protected function getFactoryClass(): string;
 
-    abstract protected function get_class_prefix(): string;
-    abstract protected static function get_global_var(): string;
+    abstract protected function getClassPrefix(): string;
+    abstract protected static function getGlobalVar(): string;
 
-    public function __construct()
+    protected function getRenderData(object $item): array
+    {
+        return [];
+    }
+
+    /**
+     * @param TService $service
+     */
+    public function __construct(protected object $service)
     {
         add_action('admin_init', [$this, 'dispatch']);
-        add_action('admin_menu', [$this, 'register_table_loader']);
+        add_action('admin_menu', [$this, 'registerTableLoader']);
     }
 
-    public function register_table_loader(): void
+    public function registerTableLoader(): void
     {
         $slug_prefix = 'woo-extender';
-        $page_slug   = $this->get_page()->value;
+        $page_slug   = $this->getPage()->value;
         $page_hook   = "{$slug_prefix}_page_{$slug_prefix}-{$page_slug}";
 
-        add_action("load-{$page_hook}", [$this, 'load_page_table']);
+        add_action("load-{$page_hook}", [$this, 'loadPageTable']);
     }
 
-    public function load_page_table(): void
+    public function loadPageTable(): void
     {
-        $class_prefix = $this->get_class_prefix();
-        $global_var   = static::get_global_var();
+        $class_prefix = $this->getClassPrefix();
+        $global_var   = static::getGlobalVar();
 
         $action = isset($_GET['action']) ? Sanitize::string($_GET['action']) : 'list';
 
@@ -49,7 +61,7 @@ abstract class BaseController
             $class_name = "WooExtender\\Admin\\ListTables\\{$class_prefix}ListTable";
 
             if (class_exists($class_name)) {
-                $GLOBALS[$global_var] = new $class_name();
+                $GLOBALS[$global_var] = WooExtender::make($class_name);
                 $GLOBALS[$global_var]->prepare_items();
             }
         }
@@ -58,7 +70,7 @@ abstract class BaseController
     public function dispatch(): void
     {
 
-        $page = $this->get_page();
+        $page = $this->getPage();
         $page_slug = 'woo-extender-' . $page->value;
 
         if (! isset($_REQUEST['page']) || $_REQUEST['page'] !== $page_slug) return;
@@ -90,27 +102,54 @@ abstract class BaseController
         }
     }
 
+    public function render(Pages $page): void
+    {
+
+        $action = isset($_GET['action']) ? Sanitize::string($_GET['action']) : 'list';
+        $id     = isset($_GET['id']) ? Sanitize::int($_GET['id']) : 0;
+
+        $view_data = [
+            'action' => $action,
+            'id'     => $id,
+        ];
+
+        $childData = null;
+
+        if (in_array($action, ['new', 'edit'], true)) {
+            $view_data['item'] = ($action === 'edit' && $id > 0) ? $this->service->getById($id) : null;
+            $view_data['fields'] = $this->service?->getFormFields();
+            $childData = $this->getRenderData($view_data['item']);
+        } else {
+            $global_var = static::getGlobalVar();
+            $view_data['list_table'] = $GLOBALS[$global_var] ?? null;
+        }
+
+        if (! empty($childData)) {
+            $view_data = array_merge($view_data, $childData);
+        }
+
+        PageRenderer::render($page, $view_data);
+    }
+
     protected function submission(): void
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirect('error');
         }
 
-        $nonce_action = $this->get_nonce_action();
-        $nonce_field = $this->get_nonce_field();
+        $nonce_action = $this->getNonceAction();
+        $nonce_field = $this->getNonceField();
 
         AccessController::validate_nonce($nonce_action, $nonce_field);
 
-        $service_class = $this->get_service_class();
-        $factory_class = $this->get_factory_class();
-        $service = new $service_class();
+        $factory_class = $this->getFactoryClass();
 
-        $fields  = $service->get_form_fields();
+        $fields  = $this->service->getFormFields();
 
         try {
             $dto = $factory_class::createDTO($_POST, $fields);
 
-            if (! $service->save($dto)) {
+            if (! $this->service->save($dto)) {
                 throw new \Exception(__('Failed to save the data. Please try again.', 'woo-extender'));
             }
 
@@ -130,13 +169,10 @@ abstract class BaseController
         }
 
         $id = isset($_GET['id']) ? Sanitize::int($_GET['id']) : null;
-        $nonce_action = $id ? $this->get_table_nonce_action() . "_{$id}" : $this->get_table_nonce_action();
-        $nonce_field  = $this->get_table_nonce_field();
+        $nonce_action = $id ? $this->getTableNonceAction() . "_{$id}" : $this->getTableNonceAction();
+        $nonce_field  = $this->getTableNonceField();
 
         AccessController::validate_nonce($nonce_action, $nonce_field);
-
-        $service_class = $this->get_service_class();
-        $service = new $service_class();
 
         $selected_ids = [];
 
@@ -147,9 +183,9 @@ abstract class BaseController
         }
 
         foreach ($selected_ids as $id) {
-            $supplier = $service->get_by_id($id);
+            $supplier = $this->service->getById($id);
 
-            if ($supplier) $service->delete($supplier);
+            if ($supplier) $this->service->delete($supplier);
         }
 
         $this->redirect('deleted');
@@ -157,7 +193,7 @@ abstract class BaseController
 
     protected function redirect(string $message): void
     {
-        $page_slug = 'woo-extender-' . $this->get_page()->value;
+        $page_slug = 'woo-extender-' . $this->getPage()->value;
         wp_safe_redirect(admin_url("admin.php?page={$page_slug}&message={$message}"));
         exit;
     }

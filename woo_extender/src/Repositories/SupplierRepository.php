@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WooExtender\Repository;
+namespace WooExtender\Repositories;
 
 use WooExtender\Helpers\Sanitize;
 use WooExtender\Models\BaseModel;

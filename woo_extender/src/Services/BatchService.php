@@ -6,7 +6,8 @@ namespace WooExtender\Services;
 
 use WooExtender\DTO\BatchData;
 use WooExtender\Helpers\Sanitize;
-use WooExtender\Models\Batch;
+use WooExtender\Models\BatchModel;
+use WooExtender\Repositories\BatchRepository;
 
 defined('ABSPATH') || exit;
 
@@ -14,32 +15,34 @@ class BatchService
 {
     private $cache = [];
 
+    public function __construct(private BatchRepository $repo) {}
+
     public function get_table_schema(): string
     {
-        return Batch::get_table_schema();
+        return $this->repo->get_table_schema();
     }
 
     public function get_list(array $args = []): array
     {
-        return Batch::get_all($args);
+        return $this->repo->get_all($args);
     }
 
-    public function get_count(array $args = []): string
-    {
-        return Batch::get_count($args);
-    }
-
-    public function get_by_id(int $id): ?Batch
+    public function getById(int $id): ?BatchModel
     {
         if (!isset($this->cache[$id])) {
-            $this->cache[$id] = Batch::get_by_id($id);
+            $this->cache[$id] = $this->repo->getById($id);
         }
         return $this->cache[$id];
     }
 
-    public function get_form_fields(): array
+    public function getFormFields(): array
     {
-        return Batch::get_form_fields();
+        return BatchModel::getFormFields();
+    }
+
+    public function get_count(array $args = []): string
+    {
+        return $this->repo->get_count($args);
     }
 
     public function save(BatchData $dto): int|bool
@@ -49,10 +52,10 @@ class BatchService
         $id = isset($dto->id) ? Sanitize::int($dto->id) : 0;
 
         if ($id > 0) {
-            $batch = Batch::get_by_id($id);
+            $batch = $this->repo->getById($id);
             if (! $batch) return false;
         } else {
-            $batch = new Batch();
+            $batch = new BatchModel();
         }
 
         foreach (get_object_vars($dto) as $key => $value) {
@@ -61,18 +64,18 @@ class BatchService
             }
         }
 
-        $saved_id = $batch->save();
+        $saved_id = $this->repo->save($batch);
 
         do_action('woo_extender_after_batch_save', $saved_id, $batch);
 
         return $saved_id;
     }
 
-    public function delete(Batch $batch): bool
+    public function delete(BatchModel $batch): bool
     {
         do_action('woo_extender_before_batch_delete', $batch);
 
-        $result = $batch->delete();
+        $result = $this->repo->delete($batch);
 
         if (! $result) return false;
 

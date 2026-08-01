@@ -1,9 +1,12 @@
 {
-    "name": "wooextender/core",
+    "name": "hamiya/wooextender",
     "autoload": {
         "psr-4": {
             "WooExtender\\": "src/"
-        }
+        },
+        "classmap": [
+            "src/Vendor/"
+        ]
     },
     "require": {
         "psr/container": "^2.0"

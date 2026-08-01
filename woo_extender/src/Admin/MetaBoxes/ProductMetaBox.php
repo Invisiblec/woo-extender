@@ -39,10 +39,9 @@ class ProductMetaBox
         );
 
 ?>
-        <input type="text" name="woo_extndr_field" value="<?php echo esc_attr($value); ?>" style="width:100%;">
+<input type="text" name="woo_extndr_field" value="<?php echo esc_attr($value); ?>" style="width:100%;">
 <?php
 
-        declare(strict_types=1);
     }
 
     public function save(int $post_id): void

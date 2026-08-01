@@ -6,5 +6,4 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname(dirname($vendorDir));
 
 return array(
-    'WooExtender\\Vendor\\Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
 );

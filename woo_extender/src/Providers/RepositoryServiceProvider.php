@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace WooExtender\Providers;
 
 use WooExtender\Core\Container;
-use WooExtender\Repository\SupplierRepository;
-use WooExtender\Repository\WarrantyRepository;
-use WooExtender\Repository\BatchRepository;
+use WooExtender\Interfaces\ServiceProviderInterface;
+use WooExtender\Repositories\SupplierRepository;
+use WooExtender\Repositories\WarrantyRepository;
+use WooExtender\Repositories\BatchRepository;
 
-class RepositoryServiceProvider
+class RepositoryServiceProvider implements ServiceProviderInterface
 {
     public function register(Container $container): void
     {
-        $container->set('SupplierRepository', SupplierRepository::class);
-        $container->set('WarrantyRepository', WarrantyRepository::class);
-        $container->set('BatchRepository', BatchRepository::class);
+        $container->set(SupplierRepository::class);
+        $container->set(WarrantyRepository::class);
+        $container->set(BatchRepository::class);
     }
 }

@@ -22,8 +22,6 @@ class ComposerAutoloaderInitaca37e6cf4a8737333c594758562c139
             return self::$loader;
         }
 
-        require __DIR__ . '/platform_check.php';
-
         spl_autoload_register(array('ComposerAutoloaderInitaca37e6cf4a8737333c594758562c139', 'loadClassLoader'), true, true);
         self::$loader = $loader = new \WooExtender\Vendor\Composer\Autoload\ClassLoader(\dirname(__DIR__));
         spl_autoload_unregister(array('ComposerAutoloaderInitaca37e6cf4a8737333c594758562c139', 'loadClassLoader'));

@@ -6,8 +6,8 @@ namespace WooExtender\Admin\ListTables;
 
 use Override;
 use WP_List_Table;
-use WooExtender\Services\BatchService as Batch;
 use WooExtender\Helpers\Sanitize;
+use WooExtender\Services\BatchService;
 
 defined('ABSPATH') || exit;
 
@@ -18,7 +18,7 @@ if (! class_exists('WP_List_Table')) {
 class BatchListTable extends WP_List_Table
 {
 
-    public function __construct()
+    public function __construct(private BatchService $batch)
     {
         parent::__construct([
             'singular' => 'batch',
@@ -93,7 +93,7 @@ class BatchListTable extends WP_List_Table
 
     public function column_supplier_id(object $item): ?string
     {
-        return woo_extender_get_supplier_name($item->supplier_id);
+        return woo_extender_get_supplier_name((int) $item->supplier_id);
     }
 
     public function column_cb($item): string
@@ -137,8 +137,8 @@ class BatchListTable extends WP_List_Table
             'status'  => 1
         ];
 
-        $this->items = (new Batch)->get_list($args);
-        $items_count = (new Batch)->get_count($args);
+        $this->items = $this->batch->get_list($args);
+        $items_count = $this->batch->get_count($args);
 
         $this->set_pagination_args([
             'total_items' => $items_count,

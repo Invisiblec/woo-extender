@@ -1,7 +1,7 @@
 <?php return array (
   'root' => 
   array (
-    'name' => 'wooextender/core',
+    'name' => 'hamiya/wooextender',
     'pretty_version' => 'dev-develop',
     'version' => 'dev-develop',
     'reference' => '1208c8d0ae196d4de7dededfd334f9b5288bbb07',

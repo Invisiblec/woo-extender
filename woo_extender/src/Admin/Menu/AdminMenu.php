@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace WooExtender\Admin\Menu;
 
 use WooExtender\Admin\Pages\PageRenderer;
+use WooExtender\Controllers\BatchController;
+use WooExtender\Controllers\SupplierController;
+use WooExtender\Controllers\WarrantyController;
+use WooExtender\Core\WooExtender;
 use WooExtender\Enums\Pages;
 
 defined('ABSPATH') || exit;
@@ -49,7 +53,7 @@ class AdminMenu
             Pages::Suppliers->getCurrentUserCapability(),
             'woo-extender-suppliers',
             function () {
-                PageRenderer::render(Pages::Suppliers);
+                WooExtender::make(SupplierController::class)->render(Pages::Suppliers);
             }
         );
 
@@ -60,7 +64,7 @@ class AdminMenu
             Pages::Warranties->getCurrentUserCapability(),
             'woo-extender-warranties',
             function () {
-                PageRenderer::render(Pages::Warranties);
+                WooExtender::make(WarrantyController::class)->render(Pages::Warranties);
             }
         );
 
@@ -71,7 +75,7 @@ class AdminMenu
             Pages::Batches->getCurrentUserCapability(),
             'woo-extender-batches',
             function () {
-                PageRenderer::render(Pages::Batches);
+                WooExtender::make(BatchController::class)->render(Pages::Batches);
             }
         );
 

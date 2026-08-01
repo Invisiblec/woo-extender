@@ -5,16 +5,18 @@ declare(strict_types=1);
 namespace WooExtender\Controllers;
 
 use WooExtender\Enums\Pages;
-use WooExtender\Models\Supplier;
-use WooExtender\Services\WarrantyService;
 use WooExtender\Services\AccessController;
+use WooExtender\Services\SupplierService;
+use WooExtender\Services\WarrantyService;
 
 defined('ABSPATH') || exit;
 
 class AjaxController
 {
-    public function __construct()
-    {
+    public function __construct(
+        private SupplierService $supplier,
+        private WarrantyService $warranty,
+    ) {
         add_action('wp_ajax_woo_extender_search_parent_products', [$this, 'search_parent_products']);
         add_action('wp_ajax_woo_extender_get_product_variations', [$this, 'get_product_variations']);
 
@@ -108,7 +110,7 @@ class AjaxController
         }
 
         $search_term = isset($_GET['q']) ? sanitize_text_field($_GET['q']) : '';
-        $suppliers = Supplier::get_all(['search' => $search_term, 'limit' => 20]);
+        $suppliers = $this->supplier->get_list(['search' => $search_term, 'limit' => 20]);
         $results = [];
 
         foreach ($suppliers as $supplier) {
@@ -129,7 +131,7 @@ class AjaxController
 
         $search_term = isset($_GET['q']) ? sanitize_text_field($_GET['q']) : '';
 
-        $warranties = (new WarrantyService)->get_list(['search' => $search_term, 'limit' => 20]);
+        $warranties = $this->warranty->get_list(['search' => $search_term, 'limit' => 20]);
         $results = [];
 
         foreach ($warranties as $w) {

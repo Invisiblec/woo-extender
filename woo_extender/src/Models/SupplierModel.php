@@ -8,7 +8,7 @@ defined('ABSPATH') || exit;
 
 class SupplierModel extends BaseModel
 {
-    public static function get_form_fields(): array
+    public static function getFormFields(): array
     {
         return [
             'name' => [

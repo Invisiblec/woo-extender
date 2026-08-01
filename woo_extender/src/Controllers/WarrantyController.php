@@ -7,62 +7,64 @@ namespace WooExtender\Controllers;
 use Override;
 use WooExtender\DTO\Factory\WarrantyDataFactory;
 use WooExtender\Enums\Pages;
-use WooExtender\Services\WarrantyService as Warranty;
+use WooExtender\Services\WarrantyService;
 
 defined('ABSPATH') || exit;
 
+/**
+ * @extends BaseController<WarrantyService>
+ */
 class WarrantyController extends BaseController
 {
+    public function __construct(WarrantyService $service)
+    {
+        parent::__construct($service);
+    }
+
     #[Override]
-    protected function get_page(): Pages
+    protected function getPage(): Pages
     {
         return Pages::Warranties;
     }
 
     #[Override]
-    protected function get_nonce_action(): string
+    protected function getNonceAction(): string
     {
         return 'save_warranty_action';
     }
 
     #[Override]
-    protected function get_nonce_field(): string
+    protected function getNonceField(): string
     {
         return 'warranty_nonce_field';
     }
 
     #[Override]
-    protected function get_table_nonce_action(): string
+    protected function getTableNonceAction(): string
     {
         return 'bulk-warranties';
     }
 
     #[Override]
-    protected function get_table_nonce_field(): string
+    protected function getTableNonceField(): string
     {
         return '_wpnonce-warranties';
     }
 
     #[Override]
-    protected function get_service_class(): string
-    {
-        return Warranty::class;
-    }
-
-    #[Override]
-    protected function get_factory_class(): string
+    protected function getFactoryClass(): string
     {
         return WarrantyDataFactory::class;
     }
 
     #[Override]
-    protected function get_class_prefix(): string
+    protected function getClassPrefix(): string
     {
         return 'Warranty';
     }
 
     #[Override]
-    protected static function get_global_var(): string
+    protected static function getGlobalVar(): string
     {
         return 'warranty_table';
     }

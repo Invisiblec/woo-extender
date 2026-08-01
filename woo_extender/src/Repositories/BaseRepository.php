@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace WooExtender\Repository;
+namespace WooExtender\Repositories;
 
 use WooExtender\Helpers\Sanitize;
 use WooExtender\Models\BaseModel;
@@ -57,7 +57,7 @@ abstract class BaseRepository
         return $wpdb->prefix . $this->table_name;
     }
 
-    public function get_by_id(int $id): ?BaseModel
+    public function getById(int $id): ?BaseModel
     {
         global $wpdb;
         $table_name = $this->get_table_name();

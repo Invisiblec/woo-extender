@@ -6,7 +6,7 @@ namespace WooExtender\Admin\ListTables;
 
 use Override;
 use WP_List_Table;
-use WooExtender\Services\WarrantyService as Warranty;
+use WooExtender\Services\WarrantyService;
 use WooExtender\Helpers\Sanitize;
 
 defined('ABSPATH') || exit;
@@ -18,7 +18,7 @@ if (! class_exists('WP_List_Table')) {
 class WarrantyListTable extends WP_List_Table
 {
 
-    public function __construct()
+    public function __construct(private WarrantyService $warranty)
     {
         parent::__construct([
             'singular' => 'warranty',
@@ -117,8 +117,8 @@ class WarrantyListTable extends WP_List_Table
             'status'  => 1
         ];
 
-        $this->items = (new Warranty)->get_list($args);
-        $items_count = (new Warranty)->get_count($args);
+        $this->items = $this->warranty->get_list($args);
+        $items_count = $this->warranty->get_count($args);
 
         $this->set_pagination_args([
             'total_items' => $items_count,

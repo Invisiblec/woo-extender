@@ -7,7 +7,4 @@ $baseDir = dirname(dirname($vendorDir));
 
 return array(
     'WooExtender\\Vendor\\Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
-    'WooExtender\\Vendor\\Psr\\Container\\ContainerExceptionInterface' => $vendorDir . '/psr/container/src/ContainerExceptionInterface.php',
-    'WooExtender\\Vendor\\Psr\\Container\\ContainerInterface' => $vendorDir . '/psr/container/src/ContainerInterface.php',
-    'WooExtender\\Vendor\\Psr\\Container\\NotFoundExceptionInterface' => $vendorDir . '/psr/container/src/NotFoundExceptionInterface.php',
 );

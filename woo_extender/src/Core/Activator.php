@@ -6,9 +6,9 @@ namespace WooExtender\Core;
 
 defined('ABSPATH') || exit;
 
-use WooExtender\Services\SupplierService as Supplier;
-use WooExtender\Services\WarrantyService as Warranty;
-use WooExtender\Models\Batch;
+use WooExtender\Services\SupplierService;
+use WooExtender\Services\WarrantyService;
+use WooExtender\Services\BatchService;
 
 class Activator
 {
@@ -19,10 +19,14 @@ class Activator
 
     private static function create_tables(): void
     {
+        $supplierService = WooExtender::make(SupplierService::class);
+        $warrantyService = WooExtender::make(WarrantyService::class);
+        $batchService = WooExtender::make(BatchService::class);
+
         $queries = [
-            (new Supplier)->get_table_schema(),
-            (new Warranty)->get_table_schema(),
-            Batch::get_table_schema(),
+            $supplierService->get_table_schema(),
+            $warrantyService->get_table_schema(),
+            $batchService->get_table_schema(),
         ];
 
         if (! function_exists('dbDelta')) {
