@@ -12,10 +12,10 @@ class InventoryService
 {
     public function __construct()
     {
-        add_action('woo_extender_after_batch_save', [$this, 'sync_product_stock'], 10, 2);
+        add_action('woo_extender_after_batch_save', [$this, 'syncProductStock'], 10, 2);
     }
 
-    public function sync_product_stock(int $batch_id, object $batch): void
+    public function syncProductStock(int $batch_id, object $batch): void
     {
         $product_id = $batch->product_id;
         $variation_id = $batch->variation_id;

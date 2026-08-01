@@ -118,8 +118,8 @@ class SupplierListTable extends WP_List_Table
             'status'  => 1
         ];
 
-        $this->items = $this->supplier->get_list($args);
-        $items_count = $this->supplier->get_count($args);
+        $this->items = $this->supplier->getList($args);
+        $items_count = $this->supplier->getCount($args);
 
         $this->set_pagination_args([
             'total_items' => $items_count,

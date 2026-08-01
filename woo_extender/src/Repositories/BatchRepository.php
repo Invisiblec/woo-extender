@@ -13,12 +13,12 @@ defined('ABSPATH') || exit;
 class BatchRepository extends BaseRepository
 {
 
-    protected string $table_name = 'woo_extndr_batches';
-    protected array $searchable_columns = ['sku'];
-    protected string $display_column = 'sku';
-    protected array $allowed_orderby = ['purchase_date', 'buy_price', 'quantity_total'];
+    protected string $tableName = 'woo_extndr_batches';
+    protected array $searchableColumns = ['sku'];
+    protected string $displayColumn = 'sku';
+    protected array $allowedOrderby = ['purchase_date', 'buy_price', 'quantity_total'];
 
-    protected function get_child_schema_fields(): string
+    protected function getChildSchemaFields(): string
     {
         return
             "product_id BIGINT UNSIGNED NOT NULL,
@@ -38,7 +38,7 @@ class BatchRepository extends BaseRepository
             cost_total DECIMAL(15,2) GENERATED ALWAYS AS (quantity_total * buy_price) STORED";
     }
 
-    protected function get_child_schema_indexes(): string
+    protected function getChildSchemaIndexes(): string
     {
         return
             "KEY product_variation (product_id, variation_id),
@@ -48,17 +48,17 @@ class BatchRepository extends BaseRepository
             ";
     }
 
-    protected function get_model_class(): string
+    protected function getModelClass(): string
     {
         return BatchModel::class;
     }
 
-    protected function is_valid_for_save(BaseModel $model): bool
+    protected function isValidForSave(BaseModel $model): bool
     {
         return ! empty($model->product_id) && ! empty($model->supplier_id);
     }
 
-    protected function sanitize_child_fields(BaseModel $model): array
+    protected function sanitizeChildFields(BaseModel $model): array
     {
 
         $prepared = [];

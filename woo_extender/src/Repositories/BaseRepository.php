@@ -11,28 +11,28 @@ defined('ABSPATH') || exit;
 
 abstract class BaseRepository
 {
-    protected string $table_name;
-    protected array $searchable_columns;
-    protected string $display_column = 'name';
-    protected array $allowed_orderby = ['id', 'created_at'];
+    protected string $tableName;
+    protected array $searchableColumns;
+    protected string $displayColumn = 'name';
+    protected array $allowedOrderby = ['id', 'created_at'];
 
-    abstract protected function get_child_schema_fields(): string;
-    abstract protected function get_child_schema_indexes(): string;
-    abstract protected function get_model_class(): string;
+    abstract protected function getChildSchemaFields(): string;
+    abstract protected function getChildSchemaIndexes(): string;
+    abstract protected function getModelClass(): string;
 
-    abstract protected function sanitize_child_fields(BaseModel $model): array;
-    abstract protected function is_valid_for_save(BaseModel $model): bool;
+    abstract protected function sanitizeChildFields(BaseModel $model): array;
+    abstract protected function isValidForSave(BaseModel $model): bool;
 
-    public function get_table_schema(): string
+    public function getTableSchema(): string
     {
         global $wpdb;
-        $table_name = $this->get_table_name();
+        $tableName = $this->getTableName();
         $charset_collate = $wpdb->get_charset_collate();
 
-        $child_fields = trim($this->get_child_schema_fields());
+        $child_fields = trim($this->getChildSchemaFields());
         $child_fields = rtrim($child_fields, ',');
 
-        $query = "CREATE TABLE $table_name (
+        $query = "CREATE TABLE $tableName (
             id BIGINT UNSIGNED AUTO_INCREMENT,
             $child_fields,
             status TINYINT(1) DEFAULT 1,
@@ -40,7 +40,7 @@ abstract class BaseRepository
             updated_at DATETIME DEFAULT NULL,
             PRIMARY KEY  (id)";
 
-        $indexes = $this->get_child_schema_indexes();
+        $indexes = $this->getChildSchemaIndexes();
 
         if (! empty($indexes)) {
             $query .= ", " . rtrim($indexes, ',');
@@ -51,31 +51,31 @@ abstract class BaseRepository
         return $query;
     }
 
-    protected function get_table_name(): string
+    protected function getTableName(): string
     {
         global $wpdb;
-        return $wpdb->prefix . $this->table_name;
+        return $wpdb->prefix . $this->tableName;
     }
 
     public function getById(int $id): ?BaseModel
     {
         global $wpdb;
-        $table_name = $this->get_table_name();
-        $sql = $wpdb->prepare("SELECT * FROM $table_name WHERE id = %d", $id);
+        $tableName = $this->getTableName();
+        $sql = $wpdb->prepare("SELECT * FROM $tableName WHERE id = %d", $id);
         $row = $wpdb->get_row($sql, ARRAY_A);
 
         if (! $row) return null;
 
-        $model_class = $this->get_model_class();
+        $model_class = $this->getModelClass();
 
         return new $model_class($row);
     }
 
-    public function get_all(array $args = []): array
+    public function getAll(array $args = []): array
     {
         global $wpdb;
-        $table_name = $this->get_table_name();
-        $sql = "SELECT * FROM {$table_name} WHERE 1=1";
+        $tableName = $this->getTableName();
+        $sql = "SELECT * FROM {$tableName} WHERE 1=1";
 
         $args = wp_parse_args($args, [
             'search'  => '',
@@ -88,12 +88,12 @@ abstract class BaseRepository
 
         $query_params = [];
 
-        if (! empty($args['search']) && ! empty($this->searchable_columns)) {
+        if (! empty($args['search']) && ! empty($this->searchableColumns)) {
 
             $search_term = "%" . $wpdb->esc_like($args['search']) . "%";
             $search_conditions = [];
 
-            foreach ($this->searchable_columns as $column) {
+            foreach ($this->searchableColumns as $column) {
                 $search_conditions[] = "{$column} LIKE %s";
                 $query_params[] = $search_term;
             }
@@ -107,7 +107,7 @@ abstract class BaseRepository
             $query_params[] = (int) $args['status'];
         }
 
-        $orderby = in_array($args['orderby'], $this->allowed_orderby, true) ? $args['orderby'] : 'id';
+        $orderby = in_array($args['orderby'], $this->allowedOrderby, true) ? $args['orderby'] : 'id';
         $order = strtoupper($args['order']) === 'ASC' ? 'ASC' : 'DESC';
 
         $sql .= " ORDER BY {$orderby} {$order}";
@@ -125,31 +125,31 @@ abstract class BaseRepository
 
         if (! is_array($results)) return [];
 
-        $model_class = $this->get_model_class();
+        $model_class = $this->getModelClass();
 
         return array_map(function ($row) use ($model_class) {
             return new $model_class($row);
         }, $results);
     }
 
-    public function get_count(array $args = []): string
+    public function getCount(array $args = []): string
     {
         global $wpdb;
-        $table_name = $this->get_table_name();
+        $tableName = $this->getTableName();
 
         $args = wp_parse_args($args, [
             'search' => '',
             'status' => null
         ]);
 
-        $sql = "SELECT COUNT(id) FROM $table_name WHERE 1=1";
+        $sql = "SELECT COUNT(id) FROM $tableName WHERE 1=1";
         $query_params = [];
 
-        if (! empty($args['search']) && ! empty($this->searchable_columns)) {
+        if (! empty($args['search']) && ! empty($this->searchableColumns)) {
             $search_term = "%" . $wpdb->esc_like($args['search']) . "%";
             $search_conditions = [];
 
-            foreach ($this->searchable_columns as $column) {
+            foreach ($this->searchableColumns as $column) {
                 $search_conditions[] = "{$column} LIKE %s";
                 $query_params[] = $search_term;
             }
@@ -168,14 +168,14 @@ abstract class BaseRepository
         return $total_items;
     }
 
-    public function get_as_options_list(): ?array
+    public function getAsOptionsList(): ?array
     {
         global $wpdb;
-        $table_name = $this->get_table_name();
-        $display_col = $this->display_column;
+        $tableName = $this->getTableName();
+        $display_col = $this->displayColumn;
 
         $sql = $wpdb->prepare(
-            "SELECT id, {$display_col} AS display_name FROM {$table_name} WHERE status = %d ORDER BY {$display_col} ASC",
+            "SELECT id, {$display_col} AS display_name FROM {$tableName} WHERE status = %d ORDER BY {$display_col} ASC",
             1
         );
 
@@ -196,12 +196,12 @@ abstract class BaseRepository
     {
         global $wpdb;
 
-        if (! $this->is_valid_for_save($model)) {
+        if (! $this->isValidForSave($model)) {
             return false;
         }
 
-        $table_name     = $this->get_table_name();
-        $sanitized_data = $this->sanitized_and_prepare($model);
+        $tableName     = $this->getTableName();
+        $sanitized_data = $this->sanitizedAndPrepare($model);
 
         $id = isset($model->id) ? (int) $model->id : 0;
         unset($sanitized_data['id']);
@@ -211,7 +211,7 @@ abstract class BaseRepository
             $sanitized_data['updated_at'] = current_time('mysql');
 
             $updated = $wpdb->update(
-                $table_name,
+                $tableName,
                 $sanitized_data,
                 ['id' => $id]
             );
@@ -229,7 +229,7 @@ abstract class BaseRepository
         }
 
         $sanitized_data['created_at'] = current_time('mysql');
-        $result = $wpdb->insert($table_name, $sanitized_data);
+        $result = $wpdb->insert($tableName, $sanitized_data);
 
         if ($result !== false) {
             $model->id = (int) $wpdb->insert_id;
@@ -247,7 +247,7 @@ abstract class BaseRepository
 
         if (empty($model->id)) return false;
 
-        $table_name   = $this->get_table_name();
+        $tableName   = $this->getTableName();
         $current_time = current_time('mysql');
 
         $data_to_update = [
@@ -260,7 +260,7 @@ abstract class BaseRepository
         ];
 
         $result = $wpdb->update(
-            $table_name,
+            $tableName,
             $data_to_update,
             $where_conditions
         );
@@ -274,7 +274,7 @@ abstract class BaseRepository
         return false;
     }
 
-    protected function sanitized_and_prepare(BaseModel $model): array
+    protected function sanitizedAndPrepare(BaseModel $model): array
     {
         $prepared = [];
 
@@ -291,7 +291,7 @@ abstract class BaseRepository
 
         if (isset($model->status)) $prepared['status'] = (int) $model->status;
 
-        $child_data = $this->sanitize_child_fields($model);
+        $child_data = $this->sanitizeChildFields($model);
 
         return array_merge($prepared, $child_data);
     }

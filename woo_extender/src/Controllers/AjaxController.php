@@ -17,23 +17,23 @@ class AjaxController
         private SupplierService $supplier,
         private WarrantyService $warranty,
     ) {
-        add_action('wp_ajax_woo_extender_search_parent_products', [$this, 'search_parent_products']);
-        add_action('wp_ajax_woo_extender_get_product_variations', [$this, 'get_product_variations']);
+        add_action('wp_ajax_woo_extender_search_parent_products', [$this, 'searchParentProducts']);
+        add_action('wp_ajax_woo_extender_get_product_variations', [$this, 'getProductVariations']);
 
         // Register supplier/warranty search actions expected by the form/model
-        add_action('wp_ajax_woo_extender_supplier_search', [$this, 'search_suppliers']);
-        add_action('wp_ajax_woo_extender_warranty_search', [$this, 'search_warranties']);
+        add_action('wp_ajax_woo_extender_supplier_search', [$this, 'searchSuppliers']);
+        add_action('wp_ajax_woo_extender_warranty_search', [$this, 'searchWarranties']);
 
-        add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
+        add_action('admin_enqueue_scripts', [$this, 'enqueueAdminAssets']);
     }
 
-    public function search_parent_products(): void
+    public function searchParentProducts(): void
     {
         if (!check_ajax_referer('save_batch_action', 'security', false)) {
             wp_send_json_error(__('Security check failed.', 'woo-extender'), 403);
         }
 
-        if (!AccessController::can_current_user_access(Pages::Batches)) {
+        if (!AccessController::canCurrentUserAccess(Pages::Batches)) {
             wp_send_json_error(__('Unauthorized access.', 'woo-extender'), 403);
         }
 
@@ -59,9 +59,9 @@ class AjaxController
         wp_send_json($results);
     }
 
-    public function get_product_variations(): void
+    public function getProductVariations(): void
     {
-        if (!check_ajax_referer('save_batch_action', 'security', false) || !AccessController::can_current_user_access(Pages::Batches)) {
+        if (!check_ajax_referer('save_batch_action', 'security', false) || !AccessController::canCurrentUserAccess(Pages::Batches)) {
             wp_send_json_error(__('Invalid request.', 'woo-extender'), 403);
         }
 
@@ -103,14 +103,14 @@ class AjaxController
         wp_send_json_success($results);
     }
 
-    public function search_suppliers(): void
+    public function searchSuppliers(): void
     {
         if (!check_ajax_referer('save_batch_action', 'security', false) || !current_user_can('manage_woocommerce')) {
             wp_send_json_error(__('Invalid request.', 'woo-extender'), 403);
         }
 
         $search_term = isset($_GET['q']) ? sanitize_text_field($_GET['q']) : '';
-        $suppliers = $this->supplier->get_list(['search' => $search_term, 'limit' => 20]);
+        $suppliers = $this->supplier->getList(['search' => $search_term, 'limit' => 20]);
         $results = [];
 
         foreach ($suppliers as $supplier) {
@@ -123,7 +123,7 @@ class AjaxController
         wp_send_json($results);
     }
 
-    public function search_warranties(): void
+    public function searchWarranties(): void
     {
         if (!check_ajax_referer('save_batch_action', 'security', false) || !current_user_can('manage_woocommerce')) {
             wp_send_json_error(__('Invalid request.', 'woo-extender'), 403);
@@ -131,7 +131,7 @@ class AjaxController
 
         $search_term = isset($_GET['q']) ? sanitize_text_field($_GET['q']) : '';
 
-        $warranties = $this->warranty->get_list(['search' => $search_term, 'limit' => 20]);
+        $warranties = $this->warranty->getList(['search' => $search_term, 'limit' => 20]);
         $results = [];
 
         foreach ($warranties as $w) {
@@ -144,7 +144,7 @@ class AjaxController
         wp_send_json($results);
     }
 
-    public function enqueue_admin_assets(mixed $hook): void
+    public function enqueueAdminAssets(mixed $hook): void
     {
         if (strpos($hook, 'woo-extender-batches') === false) {
             return;

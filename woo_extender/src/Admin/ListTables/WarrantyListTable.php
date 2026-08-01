@@ -117,8 +117,8 @@ class WarrantyListTable extends WP_List_Table
             'status'  => 1
         ];
 
-        $this->items = $this->warranty->get_list($args);
-        $items_count = $this->warranty->get_count($args);
+        $this->items = $this->warranty->getList($args);
+        $items_count = $this->warranty->getCount($args);
 
         $this->set_pagination_args([
             'total_items' => $items_count,

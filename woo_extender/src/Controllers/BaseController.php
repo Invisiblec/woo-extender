@@ -75,7 +75,7 @@ abstract class BaseController
 
         if (! isset($_REQUEST['page']) || $_REQUEST['page'] !== $page_slug) return;
 
-        if (! AccessController::can_current_user_access($page)) {
+        if (! AccessController::canCurrentUserAccess($page)) {
             wp_die(__('You have not access to this page.', 'woo-extender'), __('Access Error', 'woo-extender'), ['response' => 403]);
         }
 
@@ -140,7 +140,7 @@ abstract class BaseController
         $nonce_action = $this->getNonceAction();
         $nonce_field = $this->getNonceField();
 
-        AccessController::validate_nonce($nonce_action, $nonce_field);
+        AccessController::validateNonce($nonce_action, $nonce_field);
 
         $factory_class = $this->getFactoryClass();
 
@@ -172,7 +172,7 @@ abstract class BaseController
         $nonce_action = $id ? $this->getTableNonceAction() . "_{$id}" : $this->getTableNonceAction();
         $nonce_field  = $this->getTableNonceField();
 
-        AccessController::validate_nonce($nonce_action, $nonce_field);
+        AccessController::validateNonce($nonce_action, $nonce_field);
 
         $selected_ids = [];
 

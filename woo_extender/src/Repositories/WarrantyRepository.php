@@ -13,11 +13,11 @@ defined('ABSPATH') || exit;
 class WarrantyRepository extends BaseRepository
 {
 
-    protected string $table_name = 'woo_extndr_warranty_providers';
-    protected array $searchable_columns = ['name', 'slug'];
-    protected array $allowed_orderby = ['name', 'slug', 'created_at'];
+    protected string $tableName = 'woo_extndr_warranty_providers';
+    protected array $searchableColumns = ['name', 'slug'];
+    protected array $allowedOrderby = ['name', 'slug', 'created_at'];
 
-    protected function get_child_schema_fields(): string
+    protected function getChildSchemaFields(): string
     {
         $query =
             "name VARCHAR(190) NOT NULL,
@@ -32,22 +32,22 @@ class WarrantyRepository extends BaseRepository
         return $query;
     }
 
-    protected function get_child_schema_indexes(): string
+    protected function getChildSchemaIndexes(): string
     {
         return "UNIQUE KEY slug (slug)";
     }
 
-    protected function get_model_class(): string
+    protected function getModelClass(): string
     {
         return WarrantyModel::class;
     }
 
-    protected function is_valid_for_save(BaseModel $model): bool
+    protected function isValidForSave(BaseModel $model): bool
     {
         return ! empty($model->name);
     }
 
-    protected function sanitize_child_fields(BaseModel $model): array
+    protected function sanitizeChildFields(BaseModel $model): array
     {
 
         $prepared = [];

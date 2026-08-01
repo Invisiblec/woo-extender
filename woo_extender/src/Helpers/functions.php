@@ -37,10 +37,10 @@ function woo_extender_get_batch(int $batch_id): ?BatchModel
 
 function woo_extender_get_batch_list(array $args): array
 {
-    return WooExtender::make(BatchService::class)->get_list($args);
+    return WooExtender::make(BatchService::class)->getList($args);
 }
 
 function woo_extender_get_batch_count(array $args): string
 {
-    return WooExtender::make(BatchService::class)->get_count($args);
+    return WooExtender::make(BatchService::class)->getCount($args);
 }

@@ -10,7 +10,7 @@ use WooExtender\Enums\Pages;
 
 class AccessController
 {
-    public static function can_current_user_access(Pages $page): bool
+    public static function canCurrentUserAccess(Pages $page): bool
     {
         $capabilities = $page->getCapabilities();
 
@@ -26,7 +26,7 @@ class AccessController
         return current_user_can($capabilities);
     }
 
-    public static function validate_nonce(string $action, string $field): void
+    public static function validateNonce(string $action, string $field): void
     {
         if (! isset($_REQUEST[$field]) || ! wp_verify_nonce($_REQUEST[$field], $action)) {
             wp_die(__('Unauthorized access or security token has expired.', 'woo-extender'), __('Access Denied', 'woo-extender'), ['response' => 403]);

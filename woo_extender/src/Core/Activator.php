@@ -14,19 +14,19 @@ class Activator
 {
     public static function activate(): void
     {
-        self::create_tables();
+        self::createTables();
     }
 
-    private static function create_tables(): void
+    private static function createTables(): void
     {
         $supplierService = WooExtender::make(SupplierService::class);
         $warrantyService = WooExtender::make(WarrantyService::class);
         $batchService = WooExtender::make(BatchService::class);
 
         $queries = [
-            $supplierService->get_table_schema(),
-            $warrantyService->get_table_schema(),
-            $batchService->get_table_schema(),
+            $supplierService->getTableSchema(),
+            $warrantyService->getTableSchema(),
+            $batchService->getTableSchema(),
         ];
 
         if (! function_exists('dbDelta')) {

@@ -137,8 +137,8 @@ class BatchListTable extends WP_List_Table
             'status'  => 1
         ];
 
-        $this->items = $this->batch->get_list($args);
-        $items_count = $this->batch->get_count($args);
+        $this->items = $this->batch->getList($args);
+        $items_count = $this->batch->getCount($args);
 
         $this->set_pagination_args([
             'total_items' => $items_count,

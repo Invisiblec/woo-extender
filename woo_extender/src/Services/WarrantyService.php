@@ -15,14 +15,14 @@ class WarrantyService
 {
     public function __construct(private WarrantyRepository $repo) {}
 
-    public function get_table_schema(): string
+    public function getTableSchema(): string
     {
-        return $this->repo->get_table_schema();
+        return $this->repo->getTableSchema();
     }
 
-    public function get_list(array $args = []): array
+    public function getList(array $args = []): array
     {
-        return $this->repo->get_all($args);
+        return $this->repo->getAll($args);
     }
 
     public function getById(int $id): ?WarrantyModel
@@ -35,14 +35,14 @@ class WarrantyService
         return WarrantyModel::getFormFields();
     }
 
-    public function get_count(array $args = []): string
+    public function getCount(array $args = []): string
     {
-        return $this->repo->get_count($args);
+        return $this->repo->getCount($args);
     }
 
-    public function get_as_options_list(): ?array
+    public function getAsOptionsList(): ?array
     {
-        return $this->repo->get_as_options_list();
+        return $this->repo->getAsOptionsList();
     }
 
     public function save(WarrantyData $dto): int|bool

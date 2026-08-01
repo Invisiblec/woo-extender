@@ -17,14 +17,14 @@ class BatchService
 
     public function __construct(private BatchRepository $repo) {}
 
-    public function get_table_schema(): string
+    public function getTableSchema(): string
     {
-        return $this->repo->get_table_schema();
+        return $this->repo->getTableSchema();
     }
 
-    public function get_list(array $args = []): array
+    public function getList(array $args = []): array
     {
-        return $this->repo->get_all($args);
+        return $this->repo->getAll($args);
     }
 
     public function getById(int $id): ?BatchModel
@@ -40,9 +40,9 @@ class BatchService
         return BatchModel::getFormFields();
     }
 
-    public function get_count(array $args = []): string
+    public function getCount(array $args = []): string
     {
-        return $this->repo->get_count($args);
+        return $this->repo->getCount($args);
     }
 
     public function save(BatchData $dto): int|bool
