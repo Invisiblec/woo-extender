@@ -10,14 +10,6 @@ defined('ABSPATH') || exit;
 
 class ProductDataTab
 {
-    public function __construct()
-    {
-        add_filter('woocommerce_product_data_tabs', [$this, 'register']);
-        add_action('woocommerce_product_data_panels', [$this, 'render']);
-        add_action('woocommerce_admin_process_product_object', [$this, 'save']);
-        add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_scripts']);
-    }
-
     public function register(array $tabs): array
     {
         $tabs['woo_extend'] = [

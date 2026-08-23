@@ -15,12 +15,6 @@ defined('ABSPATH') || exit;
 
 class AdminMenu
 {
-
-    public function __construct()
-    {
-        add_action('admin_menu', [$this, 'register']);
-    }
-
     public function register(): void
     {
         $parent_slug = 'woo-extender-admin';

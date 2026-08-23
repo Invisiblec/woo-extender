@@ -16,16 +16,7 @@ class AjaxController
     public function __construct(
         private SupplierService $supplier,
         private WarrantyService $warranty,
-    ) {
-        add_action('wp_ajax_woo_extender_search_parent_products', [$this, 'searchParentProducts']);
-        add_action('wp_ajax_woo_extender_get_product_variations', [$this, 'getProductVariations']);
-
-        // Register supplier/warranty search actions expected by the form/model
-        add_action('wp_ajax_woo_extender_supplier_search', [$this, 'searchSuppliers']);
-        add_action('wp_ajax_woo_extender_warranty_search', [$this, 'searchWarranties']);
-
-        add_action('admin_enqueue_scripts', [$this, 'enqueueAdminAssets']);
-    }
+    ) {}
 
     public function searchParentProducts(): void
     {

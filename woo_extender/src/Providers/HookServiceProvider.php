@@ -5,31 +5,36 @@ declare(strict_types=1);
 namespace WooExtender\Providers;
 
 use WooExtender\Core\Container;
+use WooExtender\Interfaces\HookSubscriberInterface;
 use WooExtender\Interfaces\ServiceProviderInterface;
-use WooExtender\Admin\Menu\AdminMenu;
-use WooExtender\Controllers\AjaxController;
-use WooExtender\Admin\ProductDataTabs\ProductDataTab;
-use WooExtender\Controllers\SupplierController;
-use WooExtender\Controllers\WarrantyController;
-use WooExtender\Controllers\BatchController;
+use WooExtender\Hooks\Admin\AjaxHookSubscriber;
+use WooExtender\Hooks\Admin\MenuHookSubscriber;
+use WooExtender\Hooks\Admin\BatchHookSubscriber;
+use WooExtender\Hooks\Admin\SupplierHookSubscriber;
+use WooExtender\Hooks\Admin\WarrantyHookSubscriber;
+use WooExtender\Hooks\Admin\ProductDataTabHookSuscriber;
 use WooExtender\Services\InventoryService;
 
 class HookServiceProvider implements ServiceProviderInterface
 {
     protected array $classes = [
-        AdminMenu::class,
-        AjaxController::class,
-        ProductDataTab::class,
-        SupplierController::class,
-        WarrantyController::class,
-        BatchController::class,
+        MenuHookSubscriber::class,
+        AjaxHookSubscriber::class,
+        BatchHookSubscriber::class,
+        SupplierHookSubscriber::class,
+        WarrantyHookSubscriber::class,
+        ProductDataTabHookSuscriber::class,
         InventoryService::class,
     ];
 
     public function register(Container $container): void
     {
         foreach ($this->classes as $class) {
-            $container->get($class);
+            $instance = $container->get($class);
+
+            if ($instance instanceof HookSubscriberInterface) {
+                $instance->subscribe();
+            }
         }
     }
 }

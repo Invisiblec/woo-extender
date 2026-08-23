@@ -35,11 +35,7 @@ abstract class BaseController
     /**
      * @param TService $service
      */
-    public function __construct(protected object $service)
-    {
-        add_action('admin_init', [$this, 'dispatch']);
-        add_action('admin_menu', [$this, 'registerTableLoader']);
-    }
+    public function __construct(protected object $service) {}
 
     public function registerTableLoader(): void
     {
