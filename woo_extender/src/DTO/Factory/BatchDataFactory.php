@@ -13,7 +13,6 @@ class BatchDataFactory
 {
     public static function createDTO(array $raw_data, array $fields): BatchData
     {
-
         $data = DataValidator::validate($raw_data, $fields);
 
         // $keys = [

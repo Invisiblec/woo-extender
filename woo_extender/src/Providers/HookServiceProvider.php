@@ -10,10 +10,10 @@ use WooExtender\Interfaces\ServiceProviderInterface;
 use WooExtender\Hooks\Admin\AjaxHookSubscriber;
 use WooExtender\Hooks\Admin\MenuHookSubscriber;
 use WooExtender\Hooks\Admin\BatchHookSubscriber;
+use WooExtender\Hooks\Admin\InventoryHookSubscriber;
 use WooExtender\Hooks\Admin\SupplierHookSubscriber;
 use WooExtender\Hooks\Admin\WarrantyHookSubscriber;
 use WooExtender\Hooks\Admin\ProductDataTabHookSuscriber;
-use WooExtender\Services\InventoryService;
 
 class HookServiceProvider implements ServiceProviderInterface
 {
@@ -24,7 +24,7 @@ class HookServiceProvider implements ServiceProviderInterface
         SupplierHookSubscriber::class,
         WarrantyHookSubscriber::class,
         ProductDataTabHookSuscriber::class,
-        InventoryService::class,
+        InventoryHookSubscriber::class,
     ];
 
     public function register(Container $container): void

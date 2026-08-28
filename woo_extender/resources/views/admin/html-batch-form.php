@@ -1,7 +1,5 @@
 <?php
 
-use WooExtender\Services\WarrantyService as Warranty;
-
 defined('ABSPATH') || exit;
 
 /**
@@ -21,8 +19,8 @@ $title = (! empty($action) && $action === 'edit') ? __('Edit Batch', 'woo-extend
     <form action="<?php echo esc_url(admin_url('admin.php?page=woo-extender-batches')) ?>" method="post">
         <?php wp_nonce_field('save_batch_action', 'batch_nonce_field') ?>
 
-        <?php if (isset($batch_id) && $batch_id > 0): ?>
-        <input type="hidden" name="id" value="<?php echo absint($batch_id) ?>">
+        <?php if (isset($id) && $id > 0): ?>
+        <input type="hidden" name="id" value="<?php echo absint($id) ?>">
         <?php endif; ?>
 
         <?php if (isset($_GET['page'])): ?>

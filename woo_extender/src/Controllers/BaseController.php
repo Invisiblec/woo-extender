@@ -113,8 +113,10 @@ abstract class BaseController
 
         if (in_array($action, ['new', 'edit'], true)) {
             $view_data['item'] = ($action === 'edit' && $id > 0) ? $this->service->getById($id) : null;
+            if (! empty($view_data['item'])) {
+                $childData = $this->getRenderData($view_data['item']);
+            }
             $view_data['fields'] = $this->service?->getFormFields();
-            $childData = $this->getRenderData($view_data['item']);
         } else {
             $global_var = static::getGlobalVar();
             $view_data['list_table'] = $GLOBALS[$global_var] ?? null;

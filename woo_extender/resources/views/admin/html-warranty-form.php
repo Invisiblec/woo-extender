@@ -18,8 +18,8 @@ $title = (! empty($action) && $action === 'edit') ? __('Edit Warranty Provider',
     <form action="<?php echo esc_url(admin_url('admin.php?page=woo-extender-warranties')); ?>" method="post">
         <?php wp_nonce_field('save_warranty_action', 'warranty_nonce_field'); ?>
 
-        <?php if (isset($warranty_id) && $warranty_id > 0): ?>
-        <input type="hidden" name="id" value="<?php echo absint($warranty_id); ?>">
+        <?php if (isset($id) && $id > 0): ?>
+        <input type="hidden" name="id" value="<?php echo absint($id); ?>">
         <?php endif; ?>
 
         <?php if (isset($_GET['page'])): ?>

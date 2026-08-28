@@ -28,7 +28,7 @@ class Sanitize
         };
     }
 
-    public static function string(string $value): string
+    public static function string(mixed $value): string
     {
         return sanitize_text_field($value);
     }
@@ -38,27 +38,27 @@ class Sanitize
         return absint($value);
     }
 
-    public static function float(float $value): float
+    public static function float(mixed $value): float
     {
         return floatval($value);
     }
 
-    public static function email(string $value): string
+    public static function email(mixed $value): string
     {
         return sanitize_email($value);
     }
 
-    public static function url(string $value): string
+    public static function url(mixed $value): string
     {
         return esc_url_raw($value);
     }
 
-    public static function textarea(string $value): string
+    public static function textarea(mixed $value): string
     {
         return sanitize_textarea_field($value);
     }
 
-    public static function date(string $value, string $format = 'Y-m-d'): ?string
+    public static function date(mixed $value, string $format = 'Y-m-d'): ?string
     {
         $value = sanitize_text_field($value);
 
