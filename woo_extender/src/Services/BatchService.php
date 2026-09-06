@@ -50,10 +50,13 @@ class BatchService
         do_action('woo_extender_before_batch_save', $dto);
 
         $id = isset($dto->id) ? Sanitize::int($dto->id) : 0;
+        $oldQty = 0;
 
         if ($id > 0) {
             $batch = $this->repo->getById($id);
             if (! $batch) return false;
+
+            $oldQty = $batch->quantity_total ?? 0;
         } else {
             $batch = new BatchModel();
         }
@@ -66,7 +69,7 @@ class BatchService
 
         $saved_id = $this->repo->save($batch);
 
-        do_action('woo_extender_after_batch_save', $saved_id, $batch);
+        do_action('woo_extender_after_batch_save', $batch, $oldQty);
 
         return $saved_id;
     }

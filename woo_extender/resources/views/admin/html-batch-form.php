@@ -32,7 +32,11 @@ $title = (! empty($action) && $action === 'edit') ? __('Edit Batch', 'woo-extend
                 <?php foreach ($fields as $field_key => $field_meta):
                     $field_value = $item ? ($item->{$field_key} ?? '') : '';
                     $is_required = $field_meta['required'] ? 'required' : '';
-                    $field_type  = $field_meta['ui_type'] ?? $field_meta['type'];
+                    $is_editable = '';
+                    if ($action === 'edit'):
+                        $is_editable = $field_meta['editable'] ? '' : 'disabled';
+                    endif;
+                    $field_type = $field_meta['ui_type'] ?? $field_meta['type'];
                 ?>
                 <tr>
                     <th scope="row">
@@ -48,7 +52,8 @@ $title = (! empty($action) && $action === 'edit') ? __('Edit Batch', 'woo-extend
                         <select name="<?php echo esc_attr($field_key) ?>" id="field_<?php echo esc_attr($field_key) ?>"
                             class="woo-extender-parent-product-search" style="width: 100%;"
                             data-placeholder="<?php esc_attr_e('Search for a product', 'woo-extender'); ?>"
-                            data-action="<?php echo esc_attr($field_meta['action']); ?>" <?php echo $is_required ?>>
+                            data-action="<?php echo esc_attr($field_meta['action']); ?>" <?php echo $is_required ?>
+                            <?php echo $is_editable; ?>>
                             <?php if (! empty($field_value)):
                                         $product_obj = wc_get_product($field_value);
                                         if ($product_obj): ?>
@@ -64,7 +69,8 @@ $title = (! empty($action) && $action === 'edit') ? __('Edit Batch', 'woo-extend
                         <select class="woo-extender-variation-select" style="width: 100%;"
                             name="<?php echo esc_attr($field_key); ?>" id="field_<?php echo esc_attr($field_key); ?>"
                             data-action="<?php echo esc_attr($field_meta['action']); ?>"
-                            data-selected="<?php echo esc_attr($field_value); ?>" <?php echo $is_disabled; ?>>
+                            data-selected="<?php echo esc_attr($field_value); ?>" <?php echo $is_disabled; ?>
+                            <?php echo $is_editable; ?>>
                             <option value=""><?php esc_html_e('-- Select Variation (Optional) --', 'woo-extender'); ?>
                             </option>
                             <?php
@@ -90,7 +96,7 @@ $title = (! empty($action) && $action === 'edit') ? __('Edit Batch', 'woo-extend
                             name="<?php echo esc_attr($field_key); ?>" id="field_<?php echo esc_attr($field_key); ?>"
                             data-placeholder="<?php esc_attr_e("Search for a {$field_meta['label']}") ?>"
                             data-action="<?php echo esc_attr($field_meta['action']); ?>" <?php echo $is_required ?>
-                            style="width: 100%">
+                            <?php echo $is_editable; ?> style="width: 100%">
                             <?php if (! empty($field_value)): ?>
                             <option value="<?php echo esc_attr($field_value); ?>" selected="selected">
                                 <?php if ($field_key === 'supplier_id'): ?>
@@ -103,11 +109,12 @@ $title = (! empty($action) && $action === 'edit') ? __('Edit Batch', 'woo-extend
                         <?php elseif ($field_type === 'textarea'): ?>
                         <textarea name="<?php echo esc_attr($field_key); ?>"
                             id="field_<?php echo esc_attr($field_key); ?>" rows="4" class="large-text"
-                            <?php echo $is_required; ?>><?php echo esc_textarea($field_value); ?></textarea>
+                            <?php echo $is_required; ?>
+                            <?php echo $is_editable; ?>> <?php echo esc_textarea($field_value); ?></textarea>
                         <?php else : ?>
                         <input name="<?php echo esc_attr($field_key); ?>" type="<?php echo esc_attr($field_type); ?>"
                             id="field_<?php echo esc_attr($field_key); ?>" value="<?php echo esc_attr($field_value); ?>"
-                            class="regular-text" <?php echo $is_required; ?>>
+                            class="regular-text" <?php echo $is_required; ?> <?php echo $is_editable; ?>>
                         <?php endif; ?>
                     </td>
                 </tr>
