@@ -27,6 +27,10 @@ $title = (! empty($action) && $action === 'edit') ? __('Edit Batch', 'woo-extend
         <input type="hidden" name="page" value="<?php echo $_GET['page'] ?>">
         <?php endif; ?>
 
+        <?php if (isset($_GET['action'])): ?>
+        <input type="hidden" name="form_action" value="<?php echo $_GET['action'] ?>">
+        <?php endif; ?>
+
         <table>
             <tbody>
                 <?php foreach ($fields as $field_key => $field_meta):

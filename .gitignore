@@ -2,3 +2,4 @@
 .vscode/
 wordpress_data/
 vendor/
+*.xml

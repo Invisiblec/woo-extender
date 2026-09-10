@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace WooExtender\DTO\Factory;
 
 use WooExtender\DTO\BatchData;
+use WooExtender\DTO\Changeset;
+use WooExtender\Helpers\Sanitize;
 use WooExtender\Validation\DataValidator;
 
 defined('ABSPATH') || exit;
@@ -38,6 +40,27 @@ class BatchDataFactory
             purchase_date: $data['purchase_date'],
             variation_id: $data['variation_id'] ?? null,
             sku: $data['sku'] ?? null
+        );
+    }
+
+    public static function createChangeset(array $raw_data, array $fields): Changeset
+    {
+        $id = isset($raw_data['id']) ? Sanitize::int($raw_data['id']) : 0;
+        $changedData = [];
+        $validationFields = [];
+
+        foreach ($fields as $field_key => $field_meta) {
+            if (isset($field_meta['editable']) && $field_meta['editable'] && array_key_exists($field_key, $raw_data)) {
+                $changedData[$field_key] = $raw_data[$field_key];
+                $validationFields[$field_key] = $field_meta;
+            }
+        }
+
+        $cleanData = DataValidator::validate($changedData, $validationFields);
+
+        return new Changeset(
+            $id,
+            $cleanData
         );
     }
 }
