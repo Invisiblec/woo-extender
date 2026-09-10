@@ -145,14 +145,15 @@ abstract class BaseController
         $fields  = $this->service->getFormFields();
 
         try {
+            $dto = null;
 
             if ($_POST['form_action'] === 'edit') {
-                $factory_class::createChangeset($_POST, $fields);
+                $dto = $factory_class::createChangeset($_POST, $fields);
             } else {
                 $dto = $factory_class::createDTO($_POST, $fields);
             }
 
-            if (! $this->service->save($dto)) {
+            if (!empty($dto) && ! $this->service->save($dto)) {
                 throw new \Exception(__('Failed to save the data. Please try again.', 'woo-extender'));
             }
 
