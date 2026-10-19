@@ -15,7 +15,6 @@ class BatchData
         public readonly int $quantity_reserved = 0,
         public readonly int $quantity_sold = 0,
         public readonly float $buy_price = 0,
-        public readonly ?int $id = null,
         public readonly ?int $warranty_id = null,
         public readonly ?float $sell_price = null,
         public readonly ?string $warranty_start_date = null,

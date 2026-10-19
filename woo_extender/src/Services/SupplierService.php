@@ -49,19 +49,10 @@ class SupplierService
     {
         do_action('woo_extender_before_supplier_save', $dto);
 
-        $id = isset($dto->id) ? Sanitize::int($dto->id) : 0;
-
-        if ($id > 0) {
-            $supplier = $this->repo->getById($id);
-            if (! $supplier) return false;
-        } else {
-            $supplier = new SupplierModel();
-        }
+        $supplier = new SupplierModel();
 
         foreach (get_object_vars($dto) as $key => $value) {
-            if ($key !== 'id') {
-                $supplier->$key = $value;
-            }
+            $supplier->$key = $value;
         }
 
         $saved_id = $this->repo->save($supplier);

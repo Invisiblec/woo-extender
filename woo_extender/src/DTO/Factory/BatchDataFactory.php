@@ -32,7 +32,6 @@ class BatchDataFactory
             supplier_id: $data['supplier_id'],
             quantity_total: $data['quantity_total'],
             buy_price: $data['buy_price'],
-            id: $data['id'],
             warranty_id: $data['warranty_provider_id'] ?? null,
             sell_price: $data['sell_price'] ?? null,
             warranty_start_date: $data['warranty_start_date'],

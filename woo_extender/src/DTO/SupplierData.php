@@ -11,7 +11,6 @@ class SupplierData
     public function __construct(
         public readonly string $name,
         public readonly string $slug,
-        public readonly ?int $id = null,
         public readonly ?string $phone = null,
         public readonly ?string $sales_person = null,
         public readonly ?string $sales_phone = null,

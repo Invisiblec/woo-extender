@@ -49,19 +49,10 @@ class WarrantyService
     {
         do_action('woo_extender_before_warranty_save', $dto);
 
-        $id = isset($dto->id) ? Sanitize::int($dto->id) : 0;
-
-        if ($id > 0) {
-            $warranty = $this->repo->getById($id);
-            if (! $warranty) return false;
-        } else {
-            $warranty = new WarrantyModel();
-        }
+        $warranty = new WarrantyModel();
 
         foreach (get_object_vars($dto) as $key => $value) {
-            if ($key !== 'id') {
-                $warranty->$key = $value;
-            }
+            $warranty->$key = $value;
         }
 
         $saved_id = $this->repo->save($warranty);

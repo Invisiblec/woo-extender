@@ -16,8 +16,6 @@ class DataValidator
         $clean_data = [];
         $errors = [];
 
-        $clean_data['id'] = isset($input_data['id']) ? Sanitize::int($input_data['id']) : null;
-
         foreach ($fields as $field_key => $field_meta) {
             $raw_value = $input_data[$field_key] ?? '';
             $data_type = $field_meta['data_type'] ?? $field_meta['type'];

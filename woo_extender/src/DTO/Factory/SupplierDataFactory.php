@@ -18,7 +18,6 @@ class SupplierDataFactory
         return new SupplierData(
             name: $data['name'],
             slug: $data['slug'],
-            id: $data['id'],
             phone: $data['phone'],
             sales_person: $data['sales_person'],
             sales_phone: $data['sales_phone'],
