@@ -18,5 +18,6 @@ class InventoryHookSubscriber implements HookSubscriberInterface
     public function subscribe(): void
     {
         add_action('woo_extender_after_batch_save', [$this->inventoryService, 'syncProductStock'], 10, 2);
+        add_action('woo_extender_after_batch_update', [$this->inventoryService, 'syncProductStock'], 10, 2);
     }
 }

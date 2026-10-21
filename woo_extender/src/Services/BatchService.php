@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace WooExtender\Services;
 
 use WooExtender\DTO\BatchData;
+use WooExtender\DTO\Changeset;
 use WooExtender\Helpers\Sanitize;
 use WooExtender\Models\BatchModel;
 use WooExtender\Repositories\BatchRepository;
@@ -49,29 +50,46 @@ class BatchService
     {
         do_action('woo_extender_before_batch_save', $dto);
 
-        $id = isset($dto->id) ? Sanitize::int($dto->id) : 0;
-        $oldQty = 0;
-
-        if ($id > 0) {
-            $batch = $this->repo->getById($id);
-            if (! $batch) return false;
-
-            $oldQty = $batch->quantity_total ?? 0;
-        } else {
-            $batch = new BatchModel();
-        }
+        $batch = new BatchModel();
 
         foreach (get_object_vars($dto) as $key => $value) {
-            if ($key !== 'id') {
-                $batch->$key = $value;
-            }
+            $batch->$key = $value;
         }
 
         $saved_id = $this->repo->save($batch);
 
-        do_action('woo_extender_after_batch_save', $batch, $oldQty);
+        if (! $saved_id) return false;
+
+        do_action('woo_extender_after_batch_save', $batch);
 
         return $saved_id;
+    }
+
+    public function update(Changeset $changeset): int|bool
+    {
+        do_action('woo_extender_before_batch_update', $changeset);
+
+        $id = isset($changeset->id) ? Sanitize::int($changeset->id) : 0;
+
+        if ($id <= 0) return false;
+
+        $batch = $this->repo->getById($id);
+
+        if (! $batch) return false;
+
+        $oldQty = $batch->quantity_total ?? 0;
+
+        foreach ($changeset->changes as $key => $value) {
+            $batch->$key = $value;
+        }
+
+        $update_id = $this->repo->save($batch);
+
+        if (! $update_id) return false;
+
+        do_action('woo_extender_after_batch_update', $batch, $oldQty);
+
+        return $update_id;
     }
 
     public function delete(BatchModel $batch): bool

@@ -9,7 +9,7 @@ use WooExtender\Validation\DataValidator;
 
 defined('ABSPATH') || exit;
 
-class WarrantyDataFactory
+class WarrantyDataFactory extends BaseDataFactory
 {
     public static function createDTO(array $raw_data, array $fields): WarrantyData
     {
@@ -18,7 +18,6 @@ class WarrantyDataFactory
         return new WarrantyData(
             name: $data['name'],
             slug: $data['slug'],
-            id: $data['id'],
             phone: $data['phone'],
             support_person: $data['support_person'],
             email: $data['email'],

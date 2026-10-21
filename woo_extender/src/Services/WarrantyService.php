@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace WooExtender\Services;
 
+use WooExtender\DTO\Changeset;
 use WooExtender\DTO\WarrantyData;
 use WooExtender\Helpers\Sanitize;
 use WooExtender\Models\WarrantyModel;
@@ -49,19 +50,10 @@ class WarrantyService
     {
         do_action('woo_extender_before_warranty_save', $dto);
 
-        $id = isset($dto->id) ? Sanitize::int($dto->id) : 0;
-
-        if ($id > 0) {
-            $warranty = $this->repo->getById($id);
-            if (! $warranty) return false;
-        } else {
-            $warranty = new WarrantyModel();
-        }
+        $warranty = new WarrantyModel();
 
         foreach (get_object_vars($dto) as $key => $value) {
-            if ($key !== 'id') {
-                $warranty->$key = $value;
-            }
+            $warranty->$key = $value;
         }
 
         $saved_id = $this->repo->save($warranty);
@@ -69,6 +61,31 @@ class WarrantyService
         do_action('woo_extender_after_warranty_save', $saved_id, $warranty);
 
         return $saved_id;
+    }
+
+    public function update(Changeset $changeset): int|bool
+    {
+        do_action('woo_extender_before_warranty_update', $changeset);
+
+        $id = isset($changeset->id) ? Sanitize::int($changeset->id) : 0;
+
+        if ($id <= 0) return false;
+
+        $warranty = $this->repo->getById($id);
+
+        if (! $warranty) return false;
+
+        foreach ($changeset->changes as $key => $value) {
+            $warranty->$key = $value;
+        }
+
+        $update_id = $this->repo->save($warranty);
+
+        if (! $update_id) return false;
+
+        do_action('woo_extender_after_warranty_update', $warranty);
+
+        return $update_id;
     }
 
     public function delete(WarrantyModel $warranty): bool
