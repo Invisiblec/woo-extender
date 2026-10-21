@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace WooExtender\Services;
 
+use WooExtender\DTO\Changeset;
 use WooExtender\DTO\SupplierData;
 use WooExtender\Helpers\Sanitize;
 use WooExtender\Models\SupplierModel;
@@ -60,6 +61,31 @@ class SupplierService
         do_action('woo_extender_after_supplier_save', $saved_id, $supplier);
 
         return $saved_id;
+    }
+
+    public function update(Changeset $changeset): int|bool
+    {
+        do_action('woo_extender_before_supplier_update', $changeset);
+
+        $id = isset($changeset->id) ? Sanitize::int($changeset->id) : 0;
+
+        if ($id <= 0) return false;
+
+        $supplier = $this->repo->getById($id);
+
+        if (! $supplier) return false;
+
+        foreach ($changeset->changes as $key => $value) {
+            $supplier->$key = $value;
+        }
+
+        $update_id = $this->repo->save($supplier);
+
+        if (! $update_id) return false;
+
+        do_action('woo_extender_after_supplier_update', $supplier);
+
+        return $update_id;
     }
 
     public function delete(SupplierModel $supplier): bool

@@ -9,7 +9,7 @@ use WooExtender\Validation\DataValidator;
 
 defined('ABSPATH') || exit;
 
-class SupplierDataFactory
+class SupplierDataFactory extends BaseDataFactory
 {
     public static function createDTO(array $raw_data, array $fields): SupplierData
     {

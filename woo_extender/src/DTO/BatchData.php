@@ -6,7 +6,7 @@ namespace WooExtender\DTO;
 
 defined('ABSPATH') || exit;
 
-class BatchData
+class BatchData extends BaseData
 {
     public function __construct(
         public readonly int $product_id,

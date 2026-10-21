@@ -6,7 +6,7 @@ namespace WooExtender\DTO;
 
 defined('ABSPATH') || exit;
 
-class WarrantyData
+class WarrantyData extends BaseData
 {
     public function __construct(
         public readonly string $name,

@@ -6,7 +6,7 @@ namespace WooExtender\DTO;
 
 defined('ABSPATH') || exit;
 
-class SupplierData
+class SupplierData extends BaseData
 {
     public function __construct(
         public readonly string $name,
