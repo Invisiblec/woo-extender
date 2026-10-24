@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace WooExtender\Providers;
 
-use Override;
+use WooExtender\Admin\AdminNotices;
 use WooExtender\Core\Container;
 use WooExtender\Interfaces\ServiceProviderInterface;
 use WooExtender\Services\AccessController;
@@ -19,6 +19,7 @@ class AppServiceProvider implements ServiceProviderInterface
 {
     public function register(Container $container): void
     {
+        $container->set(AdminNotices::class);
         $container->set(AccessController::class);
         $container->set(BatchService::class);
         $container->set(InventoryService::class);

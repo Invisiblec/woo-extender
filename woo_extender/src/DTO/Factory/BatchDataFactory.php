@@ -30,7 +30,7 @@ class BatchDataFactory extends BaseDataFactory
             supplier_id: $data['supplier_id'],
             quantity_total: $data['quantity_total'],
             buy_price: $data['buy_price'],
-            warranty_id: $data['warranty_provider_id'] ?? null,
+            warranty_provider_id: $data['warranty_provider_id'] ?? null,
             sell_price: $data['sell_price'] ?? null,
             warranty_start_date: $data['warranty_start_date'],
             warranty_end_date: $data['warranty_end_date'],

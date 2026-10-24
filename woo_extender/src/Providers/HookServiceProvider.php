@@ -11,6 +11,7 @@ use WooExtender\Hooks\Admin\AjaxHookSubscriber;
 use WooExtender\Hooks\Admin\MenuHookSubscriber;
 use WooExtender\Hooks\Admin\BatchHookSubscriber;
 use WooExtender\Hooks\Admin\InventoryHookSubscriber;
+use WooExtender\Hooks\Admin\NoticeHookSubscriber;
 use WooExtender\Hooks\Admin\SupplierHookSubscriber;
 use WooExtender\Hooks\Admin\WarrantyHookSubscriber;
 use WooExtender\Hooks\Admin\ProductDataTabHookSuscriber;
@@ -18,6 +19,7 @@ use WooExtender\Hooks\Admin\ProductDataTabHookSuscriber;
 class HookServiceProvider implements ServiceProviderInterface
 {
     protected array $classes = [
+        NoticeHookSubscriber::class,
         MenuHookSubscriber::class,
         AjaxHookSubscriber::class,
         BatchHookSubscriber::class,

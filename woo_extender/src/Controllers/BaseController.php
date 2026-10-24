@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace WooExtender\Controllers;
 
+use WooExtender\Admin\AdminNotices;
 use WooExtender\Admin\Pages\PageRenderer;
 use WooExtender\Core\WooExtender;
 use WooExtender\Enums\Pages;
+use WooExtender\Exceptions\BusinessRuleException;
 use WooExtender\Helpers\Sanitize;
 use WooExtender\Services\AccessController;
 
@@ -35,7 +37,7 @@ abstract class BaseController
     /**
      * @param TService $service
      */
-    public function __construct(protected object $service) {}
+    public function __construct(protected object $service, protected AdminNotices $adminNotices) {}
 
     public function registerTableLoader(): void
     {
@@ -146,8 +148,8 @@ abstract class BaseController
 
         try {
             if ($_POST['form_action'] === 'edit') {
-                $dto = $factory_class::createChangeset($_POST, $fields);
-                $result = $this->service->update($dto);
+                $change_set = $factory_class::createChangeset($_POST, $fields);
+                $result = $this->service->update($change_set);
             } else {
                 $dto = $factory_class::createDTO($_POST, $fields);
                 $result = $this->service->save($dto);
@@ -186,13 +188,43 @@ abstract class BaseController
             $selected_ids = [$id];
         }
 
-        foreach ($selected_ids as $id) {
-            $supplier = $this->service->getById($id);
+        $deleted = 0;
+        $failed  = [];
 
-            if ($supplier) $this->service->delete($supplier);
+        // Best effort: each item fails on its own, the loop keeps going.
+        foreach ($selected_ids as $id) {
+            try {
+                $item = $this->service->getById($id);
+
+                if (! $item) {
+                    $failed[] = sprintf(__('Item #%d was not found.', 'woo-extender'), $id);
+                    continue;
+                }
+
+                if (! $this->service->delete($item)) {
+                    throw new \RuntimeException("delete() returned false for item #{$id}");
+                }
+
+                $deleted++;
+            } catch (BusinessRuleException $e) {
+                // Expected: the reason is meant for the user.
+                $failed[] = $e->getMessage();
+            } catch (\Throwable $e) {
+                // Unexpected: details go to the log, the user gets a generic message.
+                error_log('[woo-extender] ' . $e->getMessage());
+                $failed[] = sprintf(__('Item #%d could not be deleted due to an unexpected error.', 'woo-extender'), $id);
+            }
         }
 
-        $this->redirect('deleted');
+        if ($deleted > 0) {
+            $this->adminNotices->addNotice('success', sprintf(_n('%d item deleted.', '%d items deleted.', $deleted, 'woo-extender'), $deleted));
+        }
+
+        if (! empty($failed)) {
+            $this->adminNotices->addNotice('warning', $failed);
+        }
+
+        $this->redirect(empty($failed) ? 'deleted' : 'error');
     }
 
     protected function redirect(string $message): void

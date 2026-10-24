@@ -6,6 +6,7 @@ namespace WooExtender\Services;
 
 use WooExtender\DTO\BatchData;
 use WooExtender\DTO\Changeset;
+use WooExtender\Exceptions\BusinessRuleException;
 use WooExtender\Helpers\Sanitize;
 use WooExtender\Models\BatchModel;
 use WooExtender\Repositories\BatchRepository;
@@ -94,6 +95,13 @@ class BatchService
 
     public function delete(BatchModel $batch): bool
     {
+        if ((int) $batch->quantity_sold > 0 || (int) $batch->quantity_reserved > 0) {
+            throw new BusinessRuleException(sprintf(
+                __('Batch #%d has sales or reservations and cannot be deleted.', 'woo-extender'),
+                $batch->id
+            ));
+        }
+
         do_action('woo_extender_before_batch_delete', $batch);
 
         $result = $this->repo->delete($batch);

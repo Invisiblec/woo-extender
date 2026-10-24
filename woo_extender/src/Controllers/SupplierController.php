@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace WooExtender\Controllers;
 
 use Override;
+use WooExtender\Admin\AdminNotices;
 use WooExtender\DTO\Factory\SupplierDataFactory;
 use WooExtender\Enums\Pages;
 use WooExtender\Services\SupplierService;
@@ -16,9 +17,9 @@ defined('ABSPATH') || exit;
  */
 class SupplierController extends BaseController
 {
-    public function __construct(SupplierService $service)
+    public function __construct(SupplierService $service, AdminNotices $adminNotices)
     {
-        parent::__construct($service);
+        parent::__construct($service, $adminNotices);
     }
 
     #[Override]
