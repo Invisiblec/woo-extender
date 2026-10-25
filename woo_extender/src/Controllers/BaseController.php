@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace WooExtender\Controllers;
 
-use WooExtender\Admin\AdminNotices;
+use WooExtender\Admin\FlashNotices;
 use WooExtender\Admin\Pages\PageRenderer;
 use WooExtender\Core\WooExtender;
 use WooExtender\Enums\Pages;
@@ -37,7 +37,7 @@ abstract class BaseController
     /**
      * @param TService $service
      */
-    public function __construct(protected object $service, protected AdminNotices $adminNotices) {}
+    public function __construct(protected object $service, protected FlashNotices $flashNotices) {}
 
     public function registerTableLoader(): void
     {
@@ -146,8 +146,10 @@ abstract class BaseController
 
         $fields  = $this->service->getFormFields();
 
+        $is_edit = ($_POST['form_action'] ?? '') === 'edit';
+
         try {
-            if ($_POST['form_action'] === 'edit') {
+            if ($is_edit) {
                 $change_set = $factory_class::createChangeset($_POST, $fields);
                 $result = $this->service->update($change_set);
             } else {
@@ -156,14 +158,22 @@ abstract class BaseController
             }
 
             if (! $result) {
-                throw new \Exception(__('Failed to save the data. Please try again.', 'woo-extender'));
+                throw new \RuntimeException('save()/update() returned false');
             }
 
+            $this->flashNotices->add('success', $is_edit
+                ? __('Item updated.', 'woo-extender')
+                : __('Item created.', 'woo-extender'));
             $this->redirect('success');
         } catch (\WooExtender\Exceptions\ValidationException $e) {
-            $this->redirect('error');
-        } catch (\Exception $e) {
-            wp_die($e->getMessage(), __('Save Error', 'woo-extender'), ['response' => 500]);
+            // Expected: the user filled a field wrong; show each field's message on the form.
+            $this->flashNotices->add('error', array_values($e->getErrors()));
+            $this->redirectBack();
+        } catch (\Throwable $e) {
+            // Unexpected: details go to the log, the user gets a generic message.
+            error_log('[woo-extender] ' . $e->getMessage());
+            $this->flashNotices->add('error', __('Failed to save the data. Please try again.', 'woo-extender'));
+            $this->redirectBack();
         }
     }
 
@@ -217,11 +227,11 @@ abstract class BaseController
         }
 
         if ($deleted > 0) {
-            $this->adminNotices->addNotice('success', sprintf(_n('%d item deleted.', '%d items deleted.', $deleted, 'woo-extender'), $deleted));
+            $this->flashNotices->add('success', sprintf(_n('%d item deleted.', '%d items deleted.', $deleted, 'woo-extender'), $deleted));
         }
 
         if (! empty($failed)) {
-            $this->adminNotices->addNotice('warning', $failed);
+            $this->flashNotices->add('warning', $failed);
         }
 
         $this->redirect(empty($failed) ? 'deleted' : 'error');
@@ -231,6 +241,21 @@ abstract class BaseController
     {
         $page_slug = 'woo-extender-' . $this->getPage()->value;
         wp_safe_redirect(admin_url("admin.php?page={$page_slug}&message={$message}"));
+        exit;
+    }
+
+    /**
+     * Back to the page the form was submitted from (the form itself), or the list if unknown.
+     */
+    protected function redirectBack(): void
+    {
+        $referer = wp_get_referer();
+
+        if (! $referer) {
+            $this->redirect('error');
+        }
+
+        wp_safe_redirect($referer);
         exit;
     }
 }

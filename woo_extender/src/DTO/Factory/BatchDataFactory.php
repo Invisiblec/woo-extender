@@ -11,6 +11,9 @@ defined('ABSPATH') || exit;
 
 class BatchDataFactory extends BaseDataFactory
 {
+    /**
+     * @throws \WooExtender\Exceptions\ValidationException When the submitted data is invalid.
+     */
     public static function createDTO(array $raw_data, array $fields): BatchData
     {
         $data = DataValidator::validate($raw_data, $fields);

@@ -13,8 +13,14 @@ defined('ABSPATH') || exit;
 
 abstract class BaseDataFactory
 {
+    /**
+     * @throws \WooExtender\Exceptions\ValidationException When the submitted data is invalid.
+     */
     abstract public static function createDTO(array $raw_data, array $fields): BaseData;
 
+    /**
+     * @throws \WooExtender\Exceptions\ValidationException When an editable field is invalid.
+     */
     public static function createChangeset(array $raw_data, array $fields): Changeset
     {
         $id = isset($raw_data['id']) ? Sanitize::int($raw_data['id']) : 0;

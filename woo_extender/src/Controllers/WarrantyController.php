@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace WooExtender\Controllers;
 
 use Override;
-use WooExtender\Admin\AdminNotices;
+use WooExtender\Admin\FlashNotices;
 use WooExtender\DTO\Factory\WarrantyDataFactory;
 use WooExtender\Enums\Pages;
 use WooExtender\Services\WarrantyService;
@@ -17,9 +17,9 @@ defined('ABSPATH') || exit;
  */
 class WarrantyController extends BaseController
 {
-    public function __construct(WarrantyService $service, AdminNotices $adminNotices)
+    public function __construct(WarrantyService $service, FlashNotices $flashNotices)
     {
-        parent::__construct($service, $adminNotices);
+        parent::__construct($service, $flashNotices);
     }
 
     #[Override]

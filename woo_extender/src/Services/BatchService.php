@@ -93,6 +93,9 @@ class BatchService
         return $update_id;
     }
 
+    /**
+     * @throws BusinessRuleException When the batch has sales or reservations.
+     */
     public function delete(BatchModel $batch): bool
     {
         if ((int) $batch->quantity_sold > 0 || (int) $batch->quantity_reserved > 0) {

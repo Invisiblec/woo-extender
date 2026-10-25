@@ -11,6 +11,9 @@ defined('ABSPATH') || exit;
 
 class DataValidator
 {
+    /**
+     * @throws ValidationException When a field fails validation (e.g. a required field is empty).
+     */
     public static function validate(array $input_data, array $fields): array
     {
         $clean_data = [];
@@ -24,7 +27,7 @@ class DataValidator
             if ($field_meta['required'] && empty($clean_value)) {
                 $errors[$field_key] = sprintf(
                     __('The "%s" field is required and cannot be empty.', 'woo-extender'),
-                    esc_html($field_meta['label'])
+                    $field_meta['label']
                 );
                 continue;
             }
